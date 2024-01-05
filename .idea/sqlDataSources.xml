@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="7f560c25-d122-4bfb-89aa-0e55e030e737" name="Troll vs Gnom ">
+      <data-sources db="242e5f7d-735c-47c0-b515-1e80e513b36f" ddl="426fef25-7d1a-4328-9c3f-caea1bb2cfb2" />
+    </mapping>
+  </component>
+</project>

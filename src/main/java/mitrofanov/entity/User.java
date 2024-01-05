@@ -1,9 +1,17 @@
 package mitrofanov.entity;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.Date;
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class User {
-    int telegramId;
+    Long chatId;
     String nickname;
     Enum race;
     Long gold;
@@ -16,4 +24,8 @@ public class User {
     Date dateLastGuard;
     Date dateLastFarme;
 
+    public Long getFightingPower() {
+        fightingPower = (long) (power * 2.1 + agility * 1.4 + mastery * 1.5 + weight * 1.7);
+        return fightingPower;
+    }
 }
