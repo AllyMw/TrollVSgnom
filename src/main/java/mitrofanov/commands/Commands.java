@@ -7,6 +7,7 @@ import lombok.Getter;
 enum Commands {
     START("/start", "запуск бота"),
     PROFILE("/profile", "Вывести свой профль"),
+    TRAINING("/training", "Пойти на тренировку"),
     BADALKA("/badalka", "Пойти в бадалку"),
     FARM("/farm", "Пойти на ферму");
 
