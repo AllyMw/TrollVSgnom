@@ -1,4 +1,4 @@
-package mitrofanov.repository;
+package mitrofanov.model.repository;
 
 public class BadalkaRepository {
 

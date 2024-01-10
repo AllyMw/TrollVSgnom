@@ -1,4 +1,4 @@
-package mitrofanov;
+package mitrofanov.model.db;
 
 import lombok.SneakyThrows;
 
@@ -7,11 +7,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static mitrofanov.Configuration.*;
+
 public class DBConnection {
 
-    private static final String URL = "jdbc:postgresql://localhost:5433/postgres";
+    private static final String URL = "jdbc:postgresql://[::1]:5432/et_lana_banana_database";
     private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "0810923";
 
     private static Connection conn = null;
 

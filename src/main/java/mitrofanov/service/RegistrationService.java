@@ -1,8 +1,7 @@
 package mitrofanov.service;
 
-import lombok.Builder;
-import mitrofanov.entity.User;
-import mitrofanov.repository.RegistrationRepository;
+import mitrofanov.model.entity.User;
+import mitrofanov.model.repository.RegistrationRepository;
 
 public class RegistrationService {
     RegistrationRepository registrationRepository;

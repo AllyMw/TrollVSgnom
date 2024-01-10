@@ -1,6 +1,6 @@
 package mitrofanov.service;
 
-import mitrofanov.repository.TrainingRepository;
+import mitrofanov.model.repository.TrainingRepository;
 
 import java.util.HashMap;
 

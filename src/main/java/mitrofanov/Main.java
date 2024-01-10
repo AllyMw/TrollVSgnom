@@ -1,5 +1,6 @@
 package mitrofanov;
 
+import mitrofanov.handlers.TelegramRequestHandler;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 

@@ -1,4 +1,4 @@
-package mitrofanov.entity;
+package mitrofanov.model.entity;
 
 import lombok.Data;
 

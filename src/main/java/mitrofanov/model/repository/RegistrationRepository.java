@@ -1,8 +1,8 @@
-package mitrofanov.repository;
+package mitrofanov.model.repository;
 
 import lombok.SneakyThrows;
-import mitrofanov.DBConnection;
-import mitrofanov.entity.User;
+import mitrofanov.model.db.DBConnection;
+import mitrofanov.model.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
