@@ -11,6 +11,9 @@ repositories {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+tasks.withType(JavaExec) {
+    systemProperty 'file.encoding', 'UTF-8'
+}
 dependencies {
     implementation 'org.jetbrains:annotations:24.0.0'
     implementation 'org.jetbrains:annotations:24.0.0'

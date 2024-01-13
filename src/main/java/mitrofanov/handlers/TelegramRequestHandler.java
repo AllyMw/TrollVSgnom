@@ -1,6 +1,7 @@
 package mitrofanov.handlers;
 
 import lombok.SneakyThrows;
+import mitrofanov.Configuration;
 import mitrofanov.commands.StartCommands;
 import mitrofanov.keyboards.*;
 import mitrofanov.model.repository.StatusRepository;
@@ -21,10 +22,12 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     private final RegistrationService registrationService;
     private final TrainingService trainingService;
 
+
     public TelegramRequestHandler() {
         statusRepository = new StatusRepository();
         registrationService = new RegistrationService();
         trainingService = new TrainingService();
+
     }
 
     public void init() throws TelegramApiException {
@@ -81,11 +84,11 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "GnomVStroll";
+        return "TrollVSgnom_bot";
     }
 
     @Override
     public String getBotToken() {
-        return "6970985091:AAG-i9m9oRBt48u0hLWCxoSjZg-fUFKeRd4";
+        return "6978497435:AAHJjcrb03lsitkS-MYuq6cPElDI5dPfOI8";
     }
 }

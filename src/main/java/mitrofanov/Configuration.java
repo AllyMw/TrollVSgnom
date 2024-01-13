@@ -1,5 +1,8 @@
 package mitrofanov;
 
+import lombok.Getter;
+
+
 public class Configuration {
     public static final String DB_URL = System.getenv("DB_URL");
     public static final String DB_PASSWORD = System.getenv("DB_PASSWORD");

@@ -1,6 +1,7 @@
 package mitrofanov.model.db;
 
 import lombok.SneakyThrows;
+import mitrofanov.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,9 +12,9 @@ import static mitrofanov.Configuration.*;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:postgresql://[::1]:5432/et_lana_banana_database";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "0810923";
+    private static final String URL = DB_URL;
+    private static final String USER = DB_USER;
+    private static final String PASSWORD = DB_PASSWORD;
 
     private static Connection conn = null;
 
@@ -21,7 +22,7 @@ public class DBConnection {
     public static Connection getConnection() {
 
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
             System.err.println("пизда в конекшоне");
             throw new RuntimeException(e);
