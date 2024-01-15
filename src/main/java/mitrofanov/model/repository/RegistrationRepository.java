@@ -6,6 +6,7 @@ import mitrofanov.model.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RegistrationRepository {
@@ -63,5 +64,19 @@ public class RegistrationRepository {
         statement.executeUpdate();
         statement.close();
         connection.close();
+    }
+    @SneakyThrows
+    public boolean hasChatId(Long chatId) { // true если пользователь есть
+
+        Connection connection = DBConnection.getConnection();
+        String query = "SELECT COUNT(*) FROM player WHERE chatid = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setLong(1, chatId);
+        ResultSet resultSet = statement.executeQuery();
+        int count = 0;
+        if(resultSet.next()){
+            count = resultSet.getInt(1);
+        }
+        return count > 0;
     }
 }
