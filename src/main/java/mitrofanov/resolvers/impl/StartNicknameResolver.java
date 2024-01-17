@@ -1,6 +1,7 @@
 package mitrofanov.resolvers.impl;
 
 import lombok.SneakyThrows;
+import mitrofanov.keyboards.ChangeRaceButton;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.service.RegistrationService;
 import mitrofanov.session.SessionManager;
@@ -33,9 +34,8 @@ public class StartNicknameResolver implements CommandResolver {
         registrationService.setNickName(text, chatId);
         setSessionStateForThisUser(chatId, State.START_RACE);
         TelegramBotUtils.sendMessage(tg_bot, "Выберите расу:", chatId);
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setReplyMarkup(PersKeyboard());
-        tg_bot.execute(sendMessage);
+        ChangeRaceButton.PersKeyboard(tg_bot, chatId);
+
 
         // добавить валидацию наличия никнейма
         // добавить вывод кнопок для расы

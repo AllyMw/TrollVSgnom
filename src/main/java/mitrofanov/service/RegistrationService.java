@@ -20,7 +20,7 @@ public class RegistrationService {
     public void setNickName(String nickName, Long chatId) {
         registrationRepository.setNickNamebyChatId(nickName, chatId);
     }
-    public void changeRace(String race, Long chatId) {
+    public void setRace(String race, Long chatId) {
         registrationRepository.setRaceByChatId(race, chatId);
     }
     public boolean hasChatId(Long chatId) {

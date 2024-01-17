@@ -3,6 +3,7 @@ package mitrofanov.handlers;
 import lombok.SneakyThrows;
 import mitrofanov.commands.StartCommands;
 import mitrofanov.configuration.Configuration;
+import mitrofanov.configuration.ConfigurationButton;
 import mitrofanov.model.repository.StatusRepository;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.resolvers.impl.StartResolver;
@@ -28,6 +29,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     private final TrainingService trainingService;
 
     public static Map<String, CommandResolver> resolvers = Configuration.resolvers;
+    public static Map<String, CommandResolver> resolversButton = ConfigurationButton.resolvers;
     private final SessionManager sessionManager = SessionManager.getInstance();
 
     static {
@@ -50,7 +52,6 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
 
         @SneakyThrows
         @Override
-
         public void onUpdateReceived(Update update) {
 
             /* Обработка кнопок */
@@ -58,9 +59,8 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 var query = update.getCallbackQuery();
                 String callData = query.getData();
                 Long chatID = query.getMessage().getChatId();
-                String username = update.getCallbackQuery().getFrom().getUserName();
                 createSessionForThisUser(chatID);
-                processCommand(callData, chatID, callData);
+                processCommandButton(callData, chatID, callData);
 
             }
 
@@ -70,7 +70,6 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 var text = message.getText();
                 var chatID = message.getChatId();
                 if (message.hasText()) {
-                    String username = message.getChat().getUserName();
                     createSessionForThisUser(chatID);
 
                     if (text.startsWith("/start") && !registrationService.hasChatId(chatID)) {
@@ -99,6 +98,10 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     }
     private void processCommand(String text, Long chatID, String resolverName) {
         CommandResolver commandResolver = resolvers.get(resolverName);
+        commandResolver.resolveCommand(this, text, chatID);
+    }
+    private void processCommandButton(String text, Long chatID, String resolverName) {
+        CommandResolver commandResolver = resolversButton.get(resolverName);
         commandResolver.resolveCommand(this, text, chatID);
     }
     private void createSessionForThisUser(Long chatID) {

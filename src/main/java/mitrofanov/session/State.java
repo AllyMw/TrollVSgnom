@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum State {
     IDLE("/idle"),
     START("/start"),
+    BUTTON("/button"),
     START_NICKNAME("/start_nickname"),
     START_RACE("/start_race"),
     PROFILE("/profile"),
