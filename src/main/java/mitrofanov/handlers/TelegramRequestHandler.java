@@ -2,11 +2,13 @@ package mitrofanov.handlers;
 
 import lombok.SneakyThrows;
 import mitrofanov.commands.StartCommands;
+import mitrofanov.configuration.Configuration;
 import mitrofanov.model.repository.StatusRepository;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.resolvers.impl.StartResolver;
 import mitrofanov.service.RegistrationService;
 import mitrofanov.service.TrainingService;
+import mitrofanov.session.Session;
 import mitrofanov.session.SessionManager;
 import mitrofanov.session.State;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -15,8 +17,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
 
 public class TelegramRequestHandler extends TelegramLongPollingBot {
 
@@ -24,7 +27,8 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     private final RegistrationService registrationService;
     private final TrainingService trainingService;
 
-    private static final Map<String, CommandResolver> resolvers = new HashMap<>();
+    public static Map<String, CommandResolver> resolvers = Configuration.resolvers;
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     static {
         StartResolver startResolver = new StartResolver();
@@ -52,49 +56,35 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
             /* Обработка кнопок */
             if (update.hasCallbackQuery()) {
                 var query = update.getCallbackQuery();
-
                 String callData = query.getData();
                 Long chatID = query.getMessage().getChatId();
-
                 String username = update.getCallbackQuery().getFrom().getUserName();
-
-
                 createSessionForThisUser(chatID);
-
-
-
                 processCommand(callData, chatID, callData);
-                if (getUserState(chatID) == State.IDLE) {
-                    greetingScreen(chatID);
-                }
+
             }
 
             /* Обработка сообщений пользователя */
             if (update.hasMessage()) {
-
                 var message = update.getMessage();
-
+                var text = message.getText();
+                var chatID = message.getChatId();
                 if (message.hasText()) {
-                    var text = message.getText();
-                    var chatID = message.getChatId();
-
                     String username = message.getChat().getUserName();
                     createSessionForThisUser(chatID);
 
-                    if (text.startsWith("/start")) {
-                        setSessionStateForThisUser(chatID, State.IDLE);
-                        greetingScreen(chatID);
-                    } else {
-                        String resolverName = getResolverName(chatID);
-                        processCommand(text, chatID, resolverName);
-                        if (SessionManager.getInstance().getSession(chatID).getState() == State.IDLE) {
-                            greetingScreen(chatID);
-                        }
+                    if (text.startsWith("/start") && !registrationService.hasChatId(chatID)) {
+                        setSessionStateForThisUser(chatID, State.START);
+                    }
+                    String resolverName = getResolverName(chatID);
+                    processCommand(text, chatID, resolverName);
+                }
+
                     }
                 }
-            }
 
-        }
+
+
 
 
 
@@ -110,5 +100,13 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     private void processCommand(String text, Long chatID, String resolverName) {
         CommandResolver commandResolver = resolvers.get(resolverName);
         commandResolver.resolveCommand(this, text, chatID);
+    }
+    private void createSessionForThisUser(Long chatID) {
+        sessionManager.createSession(chatID);
+    }
+    private static String getResolverName(Long chatID) {
+        Session session = SessionManager.getInstance().getSession(chatID);
+        String resolverName = session.getState().getValue();
+        return resolverName;
     }
 }

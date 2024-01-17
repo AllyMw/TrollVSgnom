@@ -2,7 +2,6 @@ package mitrofanov.resolvers.impl;
 
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.service.RegistrationService;
-import mitrofanov.session.SessionManager;
 import mitrofanov.session.State;
 import mitrofanov.utils.TelegramBotUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -24,16 +23,14 @@ public class StartRaceResolver implements CommandResolver {
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
 
-        registrationService.setNickName(text, chatId);
-        setSessionStateForThisUser(chatId, State.IDLE);
+        registrationService.changeRace(text, chatId);
+        StartNicknameResolver.setSessionStateForThisUser(chatId, State.IDLE);
         TelegramBotUtils.sendMessage(tg_bot, "Вы успешно зарегистрировались! Вам дано 100 золота на тренировку", chatId);
 
 
     }
 
 
-    private static void setSessionStateForThisUser(Long chat_id, State state) {
-        SessionManager.getInstance().getSession(chat_id).setState(state);
-    }
+
 }
-}
+
