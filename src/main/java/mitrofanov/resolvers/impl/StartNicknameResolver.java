@@ -9,6 +9,9 @@ import mitrofanov.session.State;
 import mitrofanov.utils.TelegramBotUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static mitrofanov.keyboards.ChangeRaceButton.PersKeyboard;
 
@@ -30,12 +33,21 @@ public class StartNicknameResolver implements CommandResolver {
     @SneakyThrows
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
-
+        SendMessage sendMessage = new SendMessage();
         registrationService.setNickName(text, chatId);
         setSessionStateForThisUser(chatId, State.START_RACE);
-        TelegramBotUtils.sendMessage(tg_bot, "Выберите расу:", chatId);
-        ChangeRaceButton.PersKeyboard(tg_bot, chatId);
-
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(chatId);
+        sendPhoto.setPhoto(new InputFile("https://i.postimg.cc/Jz3FmNx8/tttttt.jpg"));
+        try {
+            tg_bot.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+        sendMessage.setText("Выберите расу");
+        sendMessage.setReplyMarkup(ChangeRaceButton.PersKeyboard(tg_bot, chatId));
+        sendMessage.setChatId(chatId);
+        tg_bot.execute(sendMessage);
 
         // добавить валидацию наличия никнейма
         // добавить вывод кнопок для расы
