@@ -11,7 +11,7 @@ import java.util.List;
 public class ChangeRaceButton {
 
     @SneakyThrows
-    public static InlineKeyboardMarkup PersKeyboard(TelegramLongPollingBot tg_bot, Long chatId) {
+    public static InlineKeyboardMarkup PersKeyboard() {
 
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();

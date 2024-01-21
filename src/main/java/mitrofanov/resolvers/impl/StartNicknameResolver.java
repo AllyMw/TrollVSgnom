@@ -45,12 +45,12 @@ public class StartNicknameResolver implements CommandResolver {
             throw new RuntimeException(e);
         }
         sendMessage.setText("Выберите расу");
-        sendMessage.setReplyMarkup(ChangeRaceButton.PersKeyboard(tg_bot, chatId));
+        sendMessage.setReplyMarkup(ChangeRaceButton.PersKeyboard());
         sendMessage.setChatId(chatId);
         tg_bot.execute(sendMessage);
 
         // добавить валидацию наличия никнейма
-        // добавить вывод кнопок для расы
+
     }
 
 

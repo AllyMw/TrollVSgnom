@@ -13,7 +13,7 @@ import java.util.Date;
 public class User {
     Long chatId;
     String nickname;
-    Enum race;
+    String race;
     Long gold;
     int power;
     int agility;

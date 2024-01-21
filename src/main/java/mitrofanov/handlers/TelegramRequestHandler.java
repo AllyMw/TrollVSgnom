@@ -75,12 +75,17 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                     if (text.startsWith("/start") && !registrationService.hasChatId(chatID)) {
                         setSessionStateForThisUser(chatID, State.START);
                     }
+                    if (text.startsWith("/profile")) {
+                        setSessionStateForThisUser(chatID, State.PROFILE);
+                    }
+                    if (text.startsWith("/badalka")) {
+                        setSessionStateForThisUser(chatID, State.BADALKA);
+                    }
                     String resolverName = getResolverName(chatID);
                     processCommand(text, chatID, resolverName);
                 }
-
-                    }
-                }
+            }
+    }
 
 
 
