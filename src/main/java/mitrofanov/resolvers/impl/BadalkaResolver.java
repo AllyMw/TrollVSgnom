@@ -9,6 +9,7 @@ import mitrofanov.session.State;
 import mitrofanov.utils.TelegramBotUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
 
@@ -26,18 +27,25 @@ public class BadalkaResolver implements CommandResolver {
         return COMMAND_NAME;
     }
 
-    @SneakyThrows
+
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
         if (badalkaService.hasNotListForThisUser(chatId)) {
             badalkaService.setNewListUserForAttack(chatId);
+            badalkaService.setCurrIndexInUserForAttack(chatId);
         }
-        String userProfileForAttack = badalkaService.generateUserProfileForAttack(badalkaService.getUserForAttack(chatId).getChatId());
+        int curIndex = badalkaService.getCurrIndexInUserForAttack(chatId);
+        String userProfileForAttack = badalkaService.generateUserProfileForAttack(badalkaService.getUserForAttack(chatId, badalkaService.getCurrIndexInUserForAttack(chatId)).
+                getChatId());
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(userProfileForAttack);
         sendMessage.setChatId(chatId);
         sendMessage.setReplyMarkup(BadalkaButtonKeyboard.badalkaKeyboard());
-        tg_bot.execute(sendMessage);
+        try {
+            tg_bot.execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }

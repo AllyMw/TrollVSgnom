@@ -12,7 +12,11 @@ public enum State {
     PROFILE("/profile"),
     TRAINING("/training"),
     BADALKA("/badalka"),
-    FARM("/farm");
+    FARM("/farm"),
+
+    CHOICE_RICE_TROLL("/choiceRiceTroll"),
+    CHOICE_RICE_GNOME("/choiceRiceGnome");
+
 
     private String value;
 

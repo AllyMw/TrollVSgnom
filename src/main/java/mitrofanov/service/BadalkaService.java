@@ -2,22 +2,27 @@ package mitrofanov.service;
 
 import mitrofanov.model.entity.User;
 import mitrofanov.model.repository.BadalkaRepository;
+import mitrofanov.model.repository.UserRepository;
 
 import java.util.*;
 
 public class BadalkaService {
     private final BadalkaRepository badalkaRepository;
-    public Map<Long, List<User>> usersForAttack;
+    private final UserRepository userRepository;
+    private final Map<Long, List<User>> usersForAttack;
+    private Map<Long, Integer> currIndexes;
 
     public BadalkaService() {
-
         this.badalkaRepository = new BadalkaRepository();
+        this.userRepository = new UserRepository();
         this.usersForAttack = new HashMap<>();
+        this.currIndexes = new HashMap<>();
     }
-    public ArrayList<Long> fight(Long chatIdPlayer1, Long chatIdPlayer2) {
+
+    public ArrayList<Long> fight(Long chatIdAttaker, Long chatIdDefender) {
         ArrayList<Long> arrayList = new ArrayList<>();
-        User attaker = badalkaRepository.getUserByChatId(chatIdPlayer1);
-        User defender = badalkaRepository.getUserByChatId(chatIdPlayer2);
+        User attaker = badalkaRepository.getUserByChatId(chatIdAttaker);
+        User defender = badalkaRepository.getUserByChatId(chatIdDefender);
         while (attaker.getWeight() > 0 && defender.getWeight() > 0) {
             var accuracy = (attaker.getAgility() * (1 + (attaker.getMastery() - defender.getMastery()) / 100)) / (defender.getMastery() * (1 + (defender.getAgility() - attaker.getAgility()) / 100));
             if (Math.random() < accuracy) {
@@ -36,9 +41,9 @@ public class BadalkaService {
         List<User> userList = badalkaRepository.getListUserForAttack(chatId);
         usersForAttack.put(chatId, userList);
     }
-    public User getUserForAttack(Long chatId) {
-        List<User> userList = usersForAttack.get(chatId);
-        return userList.get(0);
+
+    public User getUserForAttack(Long chatId, int index) {
+        return  usersForAttack.get(chatId).get(index);
     }
 
     public boolean hasNotListForThisUser(Long chatId) {
@@ -59,6 +64,38 @@ public class BadalkaService {
                         "------------------------------\n";
 
         return profileForAttack;
+    }
+
+    public int getCurrIndexInUserForAttack(Long chatId) {
+        if (currIndexes.isEmpty()) {
+            return 0;
+        }
+        return currIndexes.get(chatId);
+    }
+
+    public void setCurrIndexInUserForAttack(Long chatId) {
+        if (currIndexes.containsKey(chatId)) {
+            currIndexes.replace(chatId, currIndexes.get(chatId) + 1);
+        } else {
+            currIndexes.put(chatId, 0);
+        }
+    }
+
+    public void deleteCurrIndexInUserForAttack(Long chatId) {
+        currIndexes.remove(chatId);
+    }
+
+    public Map<Long, Long> changeGoldAfterFight(Long winnerChatId, Long wonnerChatId) {
+        Map<Long, Long> table = new HashMap<>();
+        Long goldForWin = (long) (userRepository.getGoldByChatId(winnerChatId)
+                + 100 + 0.15 * userRepository.getGoldByChatId(wonnerChatId));
+        userRepository.setGoldByChatId(winnerChatId, goldForWin);
+        table.put(winnerChatId, goldForWin);
+
+        Long goldForWon = (long) ((userRepository.getGoldByChatId(wonnerChatId)) * 0.85);
+        userRepository.setGoldByChatId(wonnerChatId, goldForWon);
+        table.put(wonnerChatId, goldForWon);
+        return table;
     }
 }
 

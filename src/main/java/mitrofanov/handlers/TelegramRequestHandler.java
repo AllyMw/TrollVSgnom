@@ -54,7 +54,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
         @Override
         public void onUpdateReceived(Update update) {
 
-            /* Обработка кнопок */
+
             if (update.hasCallbackQuery()) {
                 var query = update.getCallbackQuery();
                 String callData = query.getData();
@@ -63,8 +63,6 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 processCommandButton(callData, chatID, callData);
 
             }
-
-            /* Обработка сообщений пользователя */
             if (update.hasMessage()) {
                 var message = update.getMessage();
                 var text = message.getText();
@@ -117,4 +115,5 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
         String resolverName = session.getState().getValue();
         return resolverName;
     }
+
 }
