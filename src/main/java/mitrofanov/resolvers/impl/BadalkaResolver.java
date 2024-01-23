@@ -19,7 +19,7 @@ public class BadalkaResolver implements CommandResolver {
     private final BadalkaService badalkaService;
 
     public BadalkaResolver() {
-        this.badalkaService = new BadalkaService();
+        this.badalkaService = BadalkaService.getInstance();
 
     }
     @Override

@@ -22,10 +22,10 @@ public class UserRepository {
         @SneakyThrows
         public Long getGoldByChatId(Long chatId) {
             Connection connection = DBConnection.getConnection();
-            String sql = "SELECT gold FROM player WHERE chatid = ?";
+            String sql = "SELECT * FROM player WHERE chatid = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, chatId);
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             Long gold = resultSet.getLong("gold");
             statement.close();

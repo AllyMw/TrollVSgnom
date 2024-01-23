@@ -11,6 +11,13 @@ public class BadalkaService {
     private final UserRepository userRepository;
     private final Map<Long, List<User>> usersForAttack;
     private Map<Long, Integer> currIndexes;
+    private static BadalkaService instance;
+    public static BadalkaService getInstance() {
+        if (instance == null) {
+            instance = new BadalkaService();
+        }
+        return instance;
+    }
 
     public BadalkaService() {
         this.badalkaRepository = new BadalkaRepository();
@@ -24,7 +31,7 @@ public class BadalkaService {
         User attaker = badalkaRepository.getUserByChatId(chatIdAttaker);
         User defender = badalkaRepository.getUserByChatId(chatIdDefender);
         while (attaker.getWeight() > 0 && defender.getWeight() > 0) {
-            var accuracy = (attaker.getAgility() * (1 + (attaker.getMastery() - defender.getMastery()) / 100)) / (defender.getMastery() * (1 + (defender.getAgility() - attaker.getAgility()) / 100));
+            var accuracy = (attaker.getAgility()+ attaker.getMastery()) / (defender.getMastery() + attaker.getAgility());
             if (Math.random() < accuracy) {
                 defender.setWeight(defender.getWeight() - attaker.getPower());
             }
@@ -32,8 +39,9 @@ public class BadalkaService {
             attaker = defender;
             defender = temp;
         }
-        arrayList.add(1, attaker.getChatId());
         arrayList.add(0, defender.getChatId());
+        arrayList.add(1, attaker.getChatId());
+
         return arrayList;
     }
 
@@ -81,8 +89,9 @@ public class BadalkaService {
         }
     }
 
-    public void deleteCurrIndexInUserForAttack(Long chatId) {
+    public void deleteCurrIndexInUserForAttackAndList(Long chatId) {
         currIndexes.remove(chatId);
+        usersForAttack.remove(chatId);
     }
 
     public Map<Long, Long> changeGoldAfterFight(Long winnerChatId, Long wonnerChatId) {
@@ -90,12 +99,21 @@ public class BadalkaService {
         Long goldForWin = (long) (userRepository.getGoldByChatId(winnerChatId)
                 + 100 + 0.15 * userRepository.getGoldByChatId(wonnerChatId));
         userRepository.setGoldByChatId(winnerChatId, goldForWin);
-        table.put(winnerChatId, goldForWin);
+        Long changeGoldForWin = (long) (100 + 0.15 * userRepository.getGoldByChatId(wonnerChatId));
+        table.put(winnerChatId, changeGoldForWin);
 
         Long goldForWon = (long) ((userRepository.getGoldByChatId(wonnerChatId)) * 0.85);
         userRepository.setGoldByChatId(wonnerChatId, goldForWon);
-        table.put(wonnerChatId, goldForWon);
+        Long changeGoldForWon = (long)(userRepository.getGoldByChatId(wonnerChatId) * 0.15);
+        table.put(wonnerChatId, changeGoldForWon);
         return table;
+    }
+    public boolean hasLenghtUserForAttackMoreCurrIndex(Long chatId) {
+        if (usersForAttack.get(chatId).size() > currIndexes.get(chatId)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
