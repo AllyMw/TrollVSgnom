@@ -6,7 +6,6 @@ import mitrofanov.model.repository.StatusRepository;
 
 public class RegistrationService {
     RegistrationRepository registrationRepository;
-    StatusRepository statusRepository;
 
     public RegistrationService() {
         registrationRepository = new RegistrationRepository();
