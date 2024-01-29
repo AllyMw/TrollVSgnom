@@ -23,6 +23,7 @@ public class User {
     Date dateLastAtack;
     Date dateLastGuard;
     Date dateLastFarme;
+    int globalCountFarmHours;
 
     public Long getFightingPower() {
         fightingPower = (long) (power * 2.1 + agility * 1.4 + mastery * 1.5 + weight * 1.7);

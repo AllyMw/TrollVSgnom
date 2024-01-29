@@ -19,18 +19,19 @@ public class BadalkaRepository {
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setLong(1, chatIdPlayer1);
         ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-        Long chatId = resultSet.getLong("chatid");
-        String nickname = resultSet.getString("nickname");
-        String race = resultSet.getString("race");
-        Long gold = resultSet.getLong("gold");
-        int power = resultSet.getInt("power");
-        int agility = resultSet.getInt("agility");
-        int mastery = resultSet.getInt("mastery");
-        int weight = resultSet.getInt("weight");
-        User user = User.builder().chatId(chatId).nickname(nickname).race(race).gold(gold).power(power)
-                .agility(agility).mastery(mastery).weight(weight).build();
-
+        User user = null;
+        if (resultSet.next()) {
+            Long chatId = resultSet.getLong("chatid");
+            String nickname = resultSet.getString("nickname");
+            String race = resultSet.getString("race");
+            Long gold = resultSet.getLong("gold");
+            int power = resultSet.getInt("power");
+            int agility = resultSet.getInt("agility");
+            int mastery = resultSet.getInt("mastery");
+            int weight = resultSet.getInt("weight");
+            user = User.builder().chatId(chatId).nickname(nickname).race(race).gold(gold).power(power)
+                    .agility(agility).mastery(mastery).weight(weight).build();
+        }
         return user;
     }
 

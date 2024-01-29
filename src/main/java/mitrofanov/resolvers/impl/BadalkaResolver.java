@@ -35,7 +35,7 @@ public class BadalkaResolver implements CommandResolver {
             badalkaService.setCurrIndexInUserForAttack(chatId);
         }
         int curIndex = badalkaService.getCurrIndexInUserForAttack(chatId);
-        String userProfileForAttack = badalkaService.generateUserProfileForAttack(badalkaService.getUserForAttack(chatId, badalkaService.getCurrIndexInUserForAttack(chatId)).
+        String userProfileForAttack = badalkaService.generateUserProfileForAttack(badalkaService.getUserForAttack(chatId, curIndex).
                 getChatId());
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(userProfileForAttack);
