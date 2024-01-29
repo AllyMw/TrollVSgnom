@@ -7,8 +7,8 @@ import java.util.HashMap;
 public class TrainingService {
     TrainingRepository trainingRepository;
 
-    public TrainingService(TrainingRepository trainingRepository) {
-        this.trainingRepository = trainingRepository;
+    public TrainingService() {
+        this.trainingRepository = new TrainingRepository();
     }
 
     public HashMap<String, Long> countCost(Long chatId) {

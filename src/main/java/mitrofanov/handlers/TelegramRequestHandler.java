@@ -60,7 +60,8 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 String callData = query.getData();
                 Long chatID = query.getMessage().getChatId();
                 createSessionForThisUser(chatID);
-                processCommandButton(callData, chatID, callData);
+                String resolverName = getResolverName(chatID);
+                processCommand(callData, chatID, resolverName);
 
             }
             if (update.hasMessage()) {
@@ -73,18 +74,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                     if (text.startsWith("/start") && !registrationService.hasChatId(chatID)) {
                         setSessionStateForThisUser(chatID, State.START);
                     }
-                    if (text.startsWith("/profile")) {
-                        setSessionStateForThisUser(chatID, State.PROFILE);
-                    }
-                    if (text.startsWith("/badalka")) {
-                        setSessionStateForThisUser(chatID, State.BADALKA);
-                    }
-                    if (text.startsWith("/training")) {
-                        setSessionStateForThisUser(chatID, State.TRAINING);
-                    }
-                    if (text.startsWith("/farm")) {
-                        setSessionStateForThisUser(chatID, State.FARM);
-                    }
+
                     String resolverName = getResolverName(chatID);
                     processCommand(text, chatID, resolverName);
                 }

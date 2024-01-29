@@ -26,7 +26,5 @@ public class ChoiceRiceTroll implements CommandResolver {
         registrationService.setRace("Troll", chatId);
         TelegramBotUtils.sendMessage(tg_bot, "Вы успешно зарегистрировались! Вам дано 100 золота на тренировку", chatId);
         setSessionStateForThisUser(chatId, State.IDLE);
-
-
     }
 }
