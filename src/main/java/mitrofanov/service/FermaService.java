@@ -2,6 +2,7 @@ package mitrofanov.service;
 
 import mitrofanov.model.repository.FermaRepository;
 
+
 import java.time.LocalDateTime;
 
 public class FermaService {
@@ -11,7 +12,7 @@ public class FermaService {
         if (LocalDateTime.now().isBefore(userTime)) {
             return false;  //время еще не кончилось делать ничего нельзя
         } else  {
-           return true; //можно выполнять дальнейшие действия
+            return true; //можно выполнять дальнейшие действия
         }
     }
 
@@ -20,7 +21,9 @@ public class FermaService {
         FermaRepository.updateUserTime(chatId, hours);
     }
 
-    public void addGoldForUserByFarm(Long chatId, int i) {
-
+    public void addGoldForUserByFarm(Long chatId, Long i) {
+        Long currentGold = FermaRepository.getGoldForUser(chatId);
+        Long newGold = currentGold + i;
+        FermaRepository.addGoldForUser(chatId, newGold);
     }
 }

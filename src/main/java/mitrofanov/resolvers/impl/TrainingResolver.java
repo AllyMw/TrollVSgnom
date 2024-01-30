@@ -1,20 +1,16 @@
 package mitrofanov.resolvers.impl;
 
 import lombok.SneakyThrows;
-import mitrofanov.keyboards.BadalkaButtonKeyboard;
 import mitrofanov.keyboards.TrainingKeyboard;
 import mitrofanov.resolvers.CommandResolver;
-import mitrofanov.service.BadalkaService;
 import mitrofanov.service.TrainingService;
 import mitrofanov.session.State;
 import mitrofanov.utils.TelegramBotUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.HashMap;
 
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisUser;
 
 public class TrainingResolver implements CommandResolver {
 

@@ -3,7 +3,6 @@ package mitrofanov.handlers;
 import lombok.SneakyThrows;
 import mitrofanov.commands.StartCommands;
 import mitrofanov.configuration.Configuration;
-import mitrofanov.configuration.ConfigurationButton;
 import mitrofanov.model.repository.StatusRepository;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.resolvers.impl.StartResolver;
@@ -17,10 +16,10 @@ import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.util.Map;
 
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+
+
 
 public class TelegramRequestHandler extends TelegramLongPollingBot {
 
@@ -29,7 +28,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     private final TrainingService trainingService;
 
     public static Map<String, CommandResolver> resolvers = Configuration.resolvers;
-    public static Map<String, CommandResolver> resolversButton = ConfigurationButton.resolvers;
+    public static Map<String, CommandResolver> resolversButton = Configuration.resolvers;
     private final SessionManager sessionManager = SessionManager.getInstance();
 
     static {
@@ -110,6 +109,9 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
         Session session = SessionManager.getInstance().getSession(chatID);
         String resolverName = session.getState().getValue();
         return resolverName;
+    }
+    public static void setSessionStateForThisUser(Long chat_id, State state) {
+        SessionManager.getInstance().getSession(chat_id).setState(state);
     }
 
 }

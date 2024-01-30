@@ -78,4 +78,33 @@ public class RegistrationRepository {
         }
         return count > 0;
     }
+
+    @SneakyThrows
+    public boolean nicknameIsNull(Long chatId) {Connection connection = DBConnection.getConnection();
+        String query = "SELECT nickname FROM player WHERE chatid = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setLong(1, chatId);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        String nickname = resultSet.getString(1);
+        if (nickname == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @SneakyThrows
+    public boolean raceIsNull(Long chatId) {Connection connection = DBConnection.getConnection();
+        String query = "SELECT race FROM player WHERE chatid = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setLong(1, chatId);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        String nickname = resultSet.getString(1);
+        if (nickname == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

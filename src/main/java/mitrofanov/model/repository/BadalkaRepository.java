@@ -7,6 +7,8 @@ import mitrofanov.model.db.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,5 +70,21 @@ public class BadalkaRepository {
 
         return users;
 
+    }
+
+    public boolean isTimeLessThanCurrentAttack(Long chatId) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String sql = "SELECT datelastattack FROM player WHERE chatid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, chatId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return LocalDateTime.now().isBefore(resultSet.getObject("datelastattack", LocalDateTime.class));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
     }
 }

@@ -10,7 +10,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisUser;
 
 
 public class ProfileResolver implements CommandResolver {
