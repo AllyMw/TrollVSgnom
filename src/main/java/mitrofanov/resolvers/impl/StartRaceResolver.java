@@ -23,14 +23,12 @@ public class StartRaceResolver implements CommandResolver {
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
 
+
         registrationService.setRace(text, chatId);
         StartNicknameResolver.setSessionStateForThisUser(chatId, State.IDLE);
         TelegramBotUtils.sendMessage(tg_bot, "Вы успешно зарегистрировались! Вам дано 100 золота на тренировку", chatId);
 
 
     }
-
-
-
 }
 

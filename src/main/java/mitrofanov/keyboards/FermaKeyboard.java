@@ -25,12 +25,20 @@ public class FermaKeyboard {
         twelveButton.setText("12 часов");
         twelveButton.setCallbackData("/twelveHours");
 
+        InlineKeyboardButton leaveFarmButton = new InlineKeyboardButton();
+        leaveFarmButton.setText("Покинуть ферму");
+        leaveFarmButton.setCallbackData("/leaveFarm");
+
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         firstRow.add(threeButton);
         firstRow.add(sixButton);
         firstRow.add(twelveButton);
 
+        List<InlineKeyboardButton> secondRow = new ArrayList<>();
+        secondRow.add(leaveFarmButton);
+
         rows.add(firstRow);
+        rows.add(secondRow);
 
         markup.setKeyboard(rows);
 

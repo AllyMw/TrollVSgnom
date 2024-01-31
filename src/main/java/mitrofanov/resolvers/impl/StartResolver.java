@@ -28,8 +28,6 @@ public class StartResolver implements CommandResolver {
                 TelegramBotUtils.sendMessage(tg_bot, "Здравствуйте, у вас еще нет персонажа! Давайте зарегистрируем его. Введите никнейм:", chatId);
                 registrationService.addNewPlayer(chatId);
                 setState(chatId, State.START_NICKNAME);
-            } else {
-                // вывод профиля
             }
     }
 

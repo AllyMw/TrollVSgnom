@@ -4,9 +4,12 @@ import lombok.SneakyThrows;
 import mitrofanov.commands.StartCommands;
 import mitrofanov.configuration.Configuration;
 import mitrofanov.configuration.ConfigurationButton;
+import mitrofanov.keyboards.TrainingKeyboard;
+import mitrofanov.keyboards.TrainingKeyboard.*;
 import mitrofanov.model.repository.StatusRepository;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.resolvers.impl.StartResolver;
+import mitrofanov.resolvers.impl.TrainingResolver;
 import mitrofanov.service.RegistrationService;
 import mitrofanov.service.TrainingService;
 import mitrofanov.session.Session;
@@ -14,6 +17,7 @@ import mitrofanov.session.SessionManager;
 import mitrofanov.session.State;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -63,6 +67,26 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 String resolverName = getResolverName(chatID);
                 processCommand(callData, chatID, resolverName);
 
+                String callBackData = update.getCallbackQuery().getData();
+                int messageId = update.getCallbackQuery().getMessage().getMessageId();
+                long chatId = update.getCallbackQuery().getMessage().getChatId();
+
+                TrainingKeyboard trainingKeyboard = new TrainingKeyboard();
+
+                if (callBackData.equals("/agilityTraining")) {
+                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
+
+                } if (callBackData.equals("/powerTraining")) {
+                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
+
+                } if (callBackData.equals("/masteryTraining")) {
+                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
+
+
+                } if (callBackData.equals("/weightTraining")) {
+                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
+                }
+
             }
             if (update.hasMessage()) {
                 var message = update.getMessage();
@@ -81,19 +105,18 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
             }
     }
 
-
-
+    
 
 
 
     @Override
     public String getBotUsername() {
-        return "TrollVSgnom_bot";
+        return mitrofanov.Configuration.BOT_USERNAME;
     }
 
     @Override
     public String getBotToken() {
-        return "6978497435:AAHJjcrb03lsitkS-MYuq6cPElDI5dPfOI8";
+        return mitrofanov.Configuration.BOT_TOKEN;
     }
     private void processCommand(String text, Long chatID, String resolverName) {
         CommandResolver commandResolver = resolvers.get(resolverName);
