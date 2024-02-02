@@ -28,20 +28,28 @@ public class TrainingService {
         return res;
     }
 
-    public void setNewPower(Long chatId) {
+    public int setNewPower(Long chatId) {
         trainingRepository.setNewPower(chatId);
+        int newPower = trainingRepository.getPower(chatId);
+        return newPower;
     }
 
-    public void setNewAgility(Long chatId) {
+    public int setNewAgility(Long chatId) {
         trainingRepository.setNewAgility(chatId);
+        int newAgility = trainingRepository.getAgility(chatId);
+        return newAgility;
     }
 
-    public void setNewMastery(Long chatId) {
+    public int setNewMastery(Long chatId) {
         trainingRepository.setNewMastery(chatId);
+        int newMastery = trainingRepository.getMastery(chatId);
+        return newMastery;
     }
 
-    public void setNewWeight(Long chatId) {
+    public int setNewWeight(Long chatId) {
         trainingRepository.setNewWeight(chatId);
+        int newWeight = trainingRepository.getWeight(chatId);
+        return newWeight;
     }
 
     public boolean enoughGoldForTraining(Long currCost, Long chatId) {
@@ -51,5 +59,11 @@ public class TrainingService {
 
     public void decreaseGold(Long chatID, Long gold) {
         trainingRepository.decreaseGoldByChatId(chatID, gold);
+    }
+
+    public int setNewGold(Long chatId) {
+        trainingRepository.getGoldByChatId(chatId);
+        int newGold = Math.toIntExact(trainingRepository.getGoldByChatId(chatId));
+        return newGold;
     }
 }

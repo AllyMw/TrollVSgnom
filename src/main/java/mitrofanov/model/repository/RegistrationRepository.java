@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 public class RegistrationRepository {
     public boolean addUser(User user) {
@@ -15,8 +16,8 @@ public class RegistrationRepository {
             Connection connection = DBConnection.getConnection();
 
             // Готовим запрос для вставки нового пользователя
-            String query = "INSERT INTO player (chatid, gold, power, agility, mastery, weight, fightingpower) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO player (chatid, gold, power, agility, mastery, weight, fightingpower, datelastfarme, datelastattack, datelastguard) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, user.getChatId());
             statement.setLong(2, user.getGold());
@@ -25,6 +26,9 @@ public class RegistrationRepository {
             statement.setInt(5, user.getMastery());
             statement.setInt(6, user.getWeight());
             statement.setLong(7, user.getFightingPower());
+            statement.setObject(8, user.getDateLastFarme());
+            statement.setObject(9, user.getDateLastAtack());
+            statement.setObject(10, user.getDateLastGuard());
 
             // Выполняем запрос
             int rowsInserted = statement.executeUpdate();
@@ -51,6 +55,21 @@ public class RegistrationRepository {
         statement.executeUpdate();
         statement.close();
         connection.close();
+    }
+    @SneakyThrows
+    public boolean isNicknameExists(String nickname) {
+        Connection connection = DBConnection.getConnection();
+        String sql = "SELECT COUNT(*) FROM player WHERE nickname = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, nickname);
+        ResultSet resultSet = statement.executeQuery();
+        int count = 0;
+        if (resultSet.next()) {
+            count = resultSet.getInt(1);
+        }
+        statement.close();
+        connection.close();
+        return count > 0;
     }
 
     @SneakyThrows

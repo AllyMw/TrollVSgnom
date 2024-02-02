@@ -48,7 +48,7 @@ public class FermaRepository {
     public static void addGoldForUser(Long chatId, Long gold) {
         try {
             Connection connection = DBConnection.getConnection();
-            String sql = "UPDATE player SET gold = ? WHERE chatid = ?";
+            String sql = "UPDATE player SET gold = ? WHERE chat_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, gold);
             statement.setLong(2, chatId);
@@ -70,5 +70,32 @@ public class FermaRepository {
         statement.close();
         connection.close();
         return gold;
+    }
+    @SneakyThrows
+    public static void setFarmHours(Long chatId, int farmHours) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String sql = "UPDATE player SET farmhours = ? WHERE chatid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, farmHours);
+            statement.setLong(2, chatId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка");
+        }
+    }
+    @SneakyThrows
+    public static int getFarmHours(Long chatId, int farmHours) {
+
+        Connection connection = DBConnection.getConnection();
+        String sql = "SELECT * FROM player WHERE chatid = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setLong(1, chatId);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        farmHours = resultSet.getInt("farmhours");
+        statement.close();
+        connection.close();
+        return farmHours;
     }
 }

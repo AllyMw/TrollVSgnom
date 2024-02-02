@@ -35,6 +35,7 @@ public class StartResolver implements CommandResolver {
             if (!registrationService.hasChatId(chatId)) {
                 TelegramBotUtils.sendMessage(tg_bot, "Здравствуйте, у вас еще нет персонажа! Давайте зарегистрируем его. Введите никнейм:", chatId);
                 registrationService.addNewPlayer(chatId);
+
             } else if(registrationService.nickNameNotNull(chatId)) {
                 SendMessage sendMessage = new SendMessage();
                 registrationService.setNickName(text, chatId);
@@ -59,7 +60,7 @@ public class StartResolver implements CommandResolver {
                     registrationService.setRace("Troll", chatId);
                     TelegramBotUtils.sendMessage(tg_bot, "Вы успешно зарегистрировались! Вам дано 100 золота на тренировку", chatId);
                     setSessionStateForThisUser(chatId, State.IDLE);
-                } if (text.equals("/choiceRiceGnome")) {
+                } else if (text.equals("/choiceRiceGnome")) {
                     registrationService.setRace("Gnom", chatId);
                     TelegramBotUtils.sendMessage(tg_bot, "Вы успешно зарегистрировались! Вам дано 100 золота на тренировку", chatId);
                     setSessionStateForThisUser(chatId, State.IDLE);
@@ -74,7 +75,6 @@ public class StartResolver implements CommandResolver {
                         throw new RuntimeException(e);
                     }
                 }
-
             }
     }
 

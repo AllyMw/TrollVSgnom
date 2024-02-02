@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.time.LocalDateTime;
 import java.time.LocalDate;
-import java.util.Date;
+
 @AllArgsConstructor
 @Builder
 @Getter
@@ -24,6 +24,7 @@ public class User {
     LocalDate dateLastAtack;
     LocalDate dateLastGuard;
     LocalDate dateLastFarme;
+
     int globalCountFarmHours;
 
     public Long getFightingPower() {

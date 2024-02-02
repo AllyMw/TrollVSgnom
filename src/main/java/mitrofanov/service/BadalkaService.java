@@ -118,12 +118,17 @@ public class BadalkaService {
         }
     }
     public boolean isBodalkaAvailable(Long chatId) {
+
         if (fermaService.isRunOutTimeOfUser(chatId)
                 && badalkaRepository.isTimeLessThanCurrentAttack(chatId)) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public void setTimeLastAttack(Long chatId) {
+        badalkaRepository.setTimeLastAttack(chatId);
     }
 }
 
