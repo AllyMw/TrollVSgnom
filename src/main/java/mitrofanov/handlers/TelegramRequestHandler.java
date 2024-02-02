@@ -3,37 +3,31 @@ package mitrofanov.handlers;
 import lombok.SneakyThrows;
 import mitrofanov.commands.StartCommands;
 import mitrofanov.configuration.Configuration;
-import mitrofanov.configuration.ConfigurationButton;
 import mitrofanov.keyboards.TrainingKeyboard;
-import mitrofanov.keyboards.TrainingKeyboard.*;
-import mitrofanov.model.repository.StatusRepository;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.resolvers.impl.StartResolver;
-import mitrofanov.resolvers.impl.TrainingResolver;
 import mitrofanov.service.RegistrationService;
-import mitrofanov.service.TrainingService;
 import mitrofanov.session.Session;
 import mitrofanov.session.SessionManager;
 import mitrofanov.session.State;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Map;
 
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+
+
 
 public class TelegramRequestHandler extends TelegramLongPollingBot {
 
-    private final StatusRepository statusRepository;
-    private final RegistrationService registrationService;
-    private final TrainingService trainingService;
 
+    private final RegistrationService registrationService;
+
+    private final TrainingKeyboard trainingKeyboard;
     public static Map<String, CommandResolver> resolvers = Configuration.resolvers;
-    public static Map<String, CommandResolver> resolversButton = ConfigurationButton.resolvers;
     private final SessionManager sessionManager = SessionManager.getInstance();
 
     static {
@@ -43,9 +37,9 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     }
 
     public TelegramRequestHandler() {
-        statusRepository = new StatusRepository();
         registrationService = new RegistrationService();
-        trainingService = new TrainingService();
+        trainingKeyboard = new TrainingKeyboard();
+
 
 
     }
@@ -66,26 +60,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 createSessionForThisUser(chatID);
                 String resolverName = getResolverName(chatID);
                 processCommand(callData, chatID, resolverName);
-
-                String callBackData = update.getCallbackQuery().getData();
-                int messageId = update.getCallbackQuery().getMessage().getMessageId();
-                long chatId = update.getCallbackQuery().getMessage().getChatId();
-
-                TrainingKeyboard trainingKeyboard = new TrainingKeyboard();
-
-                if (callBackData.equals("/agilityTraining")) {
-                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
-
-                } if (callBackData.equals("/powerTraining")) {
-                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
-
-                } if (callBackData.equals("/masteryTraining")) {
-                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
-
-
-                } if (callBackData.equals("/weightTraining")) {
-                    trainingKeyboard.updateTrainingKeyboard(this, chatId, messageId);
-                }
+                trainingKeyboard.updateTrainingKeyboard(this, chatID, update.getCallbackQuery().getMessage().getMessageId(), callData);
 
             }
             if (update.hasMessage()) {
@@ -105,7 +80,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
             }
     }
 
-    
+
 
 
 
@@ -122,10 +97,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
         CommandResolver commandResolver = resolvers.get(resolverName);
         commandResolver.resolveCommand(this, text, chatID);
     }
-    private void processCommandButton(String text, Long chatID, String resolverName) {
-        CommandResolver commandResolver = resolversButton.get(resolverName);
-        commandResolver.resolveCommand(this, text, chatID);
-    }
+
     private void createSessionForThisUser(Long chatID) {
         sessionManager.createSession(chatID);
     }
@@ -133,6 +105,9 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
         Session session = SessionManager.getInstance().getSession(chatID);
         String resolverName = session.getState().getValue();
         return resolverName;
+    }
+    public static void setSessionStateForThisUser(Long chat_id, State state) {
+        SessionManager.getInstance().getSession(chat_id).setState(state);
     }
 
 }

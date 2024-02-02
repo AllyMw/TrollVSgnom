@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static mitrofanov.handlers.TelegramRequestHandler.resolvers;
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisUser;
 
 public class ManagerResolver implements CommandResolver {
     private final String COMMAND_NAME = "/idle";

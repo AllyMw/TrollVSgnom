@@ -10,6 +10,7 @@ public class BadalkaService {
     private final BadalkaRepository badalkaRepository;
     private final UserRepository userRepository;
     private final Map<Long, List<User>> usersForAttack;
+    private final FermaService fermaService;
     private Map<Long, Integer> currIndexes;
     private static BadalkaService instance;
     public static BadalkaService getInstance() {
@@ -22,6 +23,7 @@ public class BadalkaService {
     public BadalkaService() {
         this.badalkaRepository = new BadalkaRepository();
         this.userRepository = new UserRepository();
+        this.fermaService = new FermaService();
         this.usersForAttack = new HashMap<>();
         this.currIndexes = new HashMap<>();
     }
@@ -115,6 +117,21 @@ public class BadalkaService {
             return false;
         }
     }
+    public boolean isBodalkaAvailable(Long chatId) {
+
+        if (fermaService.isRunOutTimeOfUser(chatId)
+                && badalkaRepository.isTimeLessThanCurrentAttack(chatId)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setTimeLastAttack(Long chatId) {
+        badalkaRepository.setTimeLastAttack(chatId);
+    }
 }
+
+
 
 

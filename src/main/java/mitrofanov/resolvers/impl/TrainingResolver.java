@@ -17,7 +17,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisUser;
+
 
 public class TrainingResolver implements CommandResolver {
 

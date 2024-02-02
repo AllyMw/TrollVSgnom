@@ -4,9 +4,8 @@ import lombok.SneakyThrows;
 import mitrofanov.model.entity.User;
 import mitrofanov.model.db.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,25 +47,58 @@ public class BadalkaRepository {
         }
         ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
-                User user = User.builder().build();
-                user.setChatId(resultSet.getLong("chatId"));
-                user.setNickname(resultSet.getString("nickname"));
-                user.setRace(resultSet.getString("race"));
-                user.setGold(resultSet.getLong("gold"));
-                user.setPower(resultSet.getInt("power"));
-                user.setAgility(resultSet.getInt("agility"));
-                user.setMastery(resultSet.getInt("mastery"));
-                user.setWeight(resultSet.getInt("weight"));
-                users.add(user);
-            }
+        while (resultSet.next()) {
+            User user = User.builder().build();
+            user.setChatId(resultSet.getLong("chatId"));
+            user.setNickname(resultSet.getString("nickname"));
+            user.setRace(resultSet.getString("race"));
+            user.setGold(resultSet.getLong("gold"));
+            user.setPower(resultSet.getInt("power"));
+            user.setAgility(resultSet.getInt("agility"));
+            user.setMastery(resultSet.getInt("mastery"));
+            user.setWeight(resultSet.getInt("weight"));
+            users.add(user);
+        }
 
-            // Закрытие ресурсов
-            resultSet.close();
-            statement.close();
+        // Закрытие ресурсов
+        resultSet.close();
+        statement.close();
 
 
         return users;
 
     }
+
+    public boolean isTimeLessThanCurrentAttack(Long chatId) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String sql = "SELECT datelastattack FROM player WHERE chatid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, chatId);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            LocalDateTime localDateTime = resultSet.getObject("datelastattack", LocalDateTime.class);
+            if (localDateTime == null) {
+                return true;
+            } else {
+                return LocalDateTime.now().isAfter(localDateTime);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setTimeLastAttack(Long chatId) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String sql = "UPDATE player SET datelastattack = ? WHERE chatid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().plusMinutes(5)));
+            statement.setLong(2, chatId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка");
+        }
+    }
 }
+

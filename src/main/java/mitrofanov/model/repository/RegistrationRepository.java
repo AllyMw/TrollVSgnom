@@ -16,8 +16,8 @@ public class RegistrationRepository {
             Connection connection = DBConnection.getConnection();
 
             // Готовим запрос для вставки нового пользователя
-            String query = "INSERT INTO player (chatid, gold, power, agility, mastery, weight, fightingpower, datelastfarme) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO player (chatid, gold, power, agility, mastery, weight, fightingpower, datelastfarme, datelastattack, datelastguard) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, user.getChatId());
             statement.setLong(2, user.getGold());
@@ -27,6 +27,8 @@ public class RegistrationRepository {
             statement.setInt(6, user.getWeight());
             statement.setLong(7, user.getFightingPower());
             statement.setObject(8, user.getDateLastFarme());
+            statement.setObject(9, user.getDateLastAtack());
+            statement.setObject(10, user.getDateLastGuard());
 
             // Выполняем запрос
             int rowsInserted = statement.executeUpdate();
@@ -94,5 +96,34 @@ public class RegistrationRepository {
             count = resultSet.getInt(1);
         }
         return count > 0;
+    }
+
+    @SneakyThrows
+    public boolean nicknameIsNull(Long chatId) {Connection connection = DBConnection.getConnection();
+        String query = "SELECT nickname FROM player WHERE chatid = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setLong(1, chatId);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        String nickname = resultSet.getString(1);
+        if (nickname == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @SneakyThrows
+    public boolean raceIsNull(Long chatId) {Connection connection = DBConnection.getConnection();
+        String query = "SELECT race FROM player WHERE chatid = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setLong(1, chatId);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        String nickname = resultSet.getString(1);
+        if (nickname == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

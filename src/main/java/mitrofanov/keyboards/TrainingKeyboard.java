@@ -49,8 +49,6 @@ public class TrainingKeyboard {
         cancelTraining.setText("Выйти");
         cancelTraining.setCallbackData("/cancelTraining");
 
-
-
         rowInLine.add(powerButton);
         rowInLine.add(agilityButton);
         rowInLine1.add(masteryButton);
@@ -68,59 +66,62 @@ public class TrainingKeyboard {
         bot.execute(sendMessage);
 
     }
-    public @NonNull String updateTrainingKeyboard(TelegramLongPollingBot bot, Long chatId, Integer messageId) throws TelegramApiException {
+    public @NonNull String updateTrainingKeyboard(TelegramLongPollingBot bot, Long chatId, Integer messageId, String callBack) throws TelegramApiException {
+        if (callBack.equals("/agilityTraining")
+                || callBack.equals("/powerTraining")
+                || callBack.equals("/masteryTraining")
+                || callBack.equals("/weightTraining")) {
+            TrainingService trainingService = new TrainingService();
+            HashMap<String, Long> cost = trainingService.countCost(chatId);
 
-        TrainingService trainingService = new TrainingService();
-        HashMap<String, Long> cost = trainingService.countCost(chatId);
+            EditMessageText editMessageText = new EditMessageText();
+            editMessageText.setChatId(chatId);
+            editMessageText.setMessageId(messageId);
+            editMessageText.setText("Какую характеристику хотите прокачать?\nПосле оканчания тренировки не забудь нажать на кнопку \"Выйти\"");
 
-        EditMessageText editMessageText = new EditMessageText();
-        editMessageText.setChatId(chatId);
-        editMessageText.setMessageId(messageId);
-        editMessageText.setText("Какую характеристику хотите прокачать?\nПосле оканчания тренировки не забудь нажать на кнопку \"Выйти\"");
+            InlineKeyboardButton updatePowerButton = new InlineKeyboardButton();
+            updatePowerButton.setText("Cила - " + cost.get("power") + " золота");
+            updatePowerButton.setCallbackData("/powerTraining");
 
-        InlineKeyboardButton updatePowerButton = new InlineKeyboardButton();
-        updatePowerButton.setText("Cила - " + cost.get("power") + " золота");
-        updatePowerButton.setCallbackData("/powerTraining");
+            InlineKeyboardButton updateAgilityButton = new InlineKeyboardButton();
+            updateAgilityButton.setText("Ловкость - " + cost.get("agility") + " золота");
+            updateAgilityButton.setCallbackData("/agilityTraining");
 
-        InlineKeyboardButton updateAgilityButton = new InlineKeyboardButton();
-        updateAgilityButton.setText("Ловкость - " + cost.get("agility") + " золота");
-        updateAgilityButton.setCallbackData("/agilityTraining");
+            InlineKeyboardButton updateMasteryButton = new InlineKeyboardButton();
+            updateMasteryButton.setText("Мастерство - " + cost.get("mastery") + " золота");
+            updateMasteryButton.setCallbackData("/masteryTraining");
 
-        InlineKeyboardButton updateMasteryButton = new InlineKeyboardButton();
-        updateMasteryButton.setText("Мастерство - " + cost.get("mastery") + " золота");
-        updateMasteryButton.setCallbackData("/masteryTraining");
+            InlineKeyboardButton updateWeightButton = new InlineKeyboardButton();
+            updateWeightButton.setText("Масса - " + cost.get("weight") + " золота");
+            updateWeightButton.setCallbackData("/weightTraining");
 
-        InlineKeyboardButton updateWeightButton = new InlineKeyboardButton();
-        updateWeightButton.setText("Масса - " + cost.get("weight") + " золота");
-        updateWeightButton.setCallbackData("/weightTraining");
+            InlineKeyboardButton updateCancelTraining = new InlineKeyboardButton();
+            updateCancelTraining.setText("Выйти");
+            updateCancelTraining.setCallbackData("/cancelTraining");
 
-        InlineKeyboardButton updateCancelTraining = new InlineKeyboardButton();
-        updateCancelTraining.setText("Выйти");
-        updateCancelTraining.setCallbackData("/cancelTraining");
+            List<InlineKeyboardButton> updateRowInLine = new ArrayList<>();
+            updateRowInLine.add(updatePowerButton);
+            updateRowInLine.add(updateAgilityButton);
 
-        List<InlineKeyboardButton> updateRowInLine = new ArrayList<>();
-        updateRowInLine.add(updatePowerButton);
-        updateRowInLine.add(updateAgilityButton);
+            List<InlineKeyboardButton> updateRowInLine1 = new ArrayList<>();
+            updateRowInLine1.add(updateMasteryButton);
+            updateRowInLine1.add(updateWeightButton);
 
-        List<InlineKeyboardButton> updateRowInLine1 = new ArrayList<>();
-        updateRowInLine1.add(updateMasteryButton);
-        updateRowInLine1.add(updateWeightButton);
+            List<InlineKeyboardButton> updateRowInLine2 = new ArrayList<>();
+            updateRowInLine2.add(updateCancelTraining);
 
-        List<InlineKeyboardButton> updateRowInLine2 = new ArrayList<>();
-        updateRowInLine2.add(updateCancelTraining);
+            List<List<InlineKeyboardButton>> updateRowsInLine = new ArrayList<>();
+            updateRowsInLine.add(updateRowInLine);
+            updateRowsInLine.add(updateRowInLine1);
+            updateRowsInLine.add(updateRowInLine2);
 
-        List<List<InlineKeyboardButton>> updateRowsInLine = new ArrayList<>();
-        updateRowsInLine.add(updateRowInLine);
-        updateRowsInLine.add(updateRowInLine1);
-        updateRowsInLine.add(updateRowInLine2);
+            InlineKeyboardMarkup updatedMarkup = new InlineKeyboardMarkup();
+            updatedMarkup.setKeyboard(updateRowsInLine);
 
-        InlineKeyboardMarkup updatedMarkup = new InlineKeyboardMarkup();
-        updatedMarkup.setKeyboard(updateRowsInLine);
+            editMessageText.setReplyMarkup(updatedMarkup);
 
-        editMessageText.setReplyMarkup(updatedMarkup);
-
-        bot.execute(editMessageText);
-
+            bot.execute(editMessageText);
+        }
         return null;
     }
 }

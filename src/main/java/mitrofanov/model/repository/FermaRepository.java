@@ -28,10 +28,10 @@ public class FermaRepository {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setLong(1, chatId);
         ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-        LocalDateTime hours = resultSet.getObject("datelastfarme", LocalDateTime.class);
-
-        return hours;
+        if (resultSet.next()) {
+            return resultSet.getObject("datelastfarme", LocalDateTime.class);
+        }
+        return null;
     }
     public static void updateUserTime(Long chatId, LocalDateTime hours) {
         try {
@@ -48,7 +48,7 @@ public class FermaRepository {
     public static void addGoldForUser(Long chatId, Long gold) {
         try {
             Connection connection = DBConnection.getConnection();
-            String sql = "UPDATE player SET gold = ? WHERE chatid = ?";
+            String sql = "UPDATE player SET gold = ? WHERE chat_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, gold);
             statement.setLong(2, chatId);

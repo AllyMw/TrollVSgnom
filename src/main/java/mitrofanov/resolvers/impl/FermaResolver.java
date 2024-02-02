@@ -13,7 +13,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.time.LocalDateTime;
 
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisUser;
+
 
 public class FermaResolver implements CommandResolver {
     private final String COMMAND_NAME = "/farm";

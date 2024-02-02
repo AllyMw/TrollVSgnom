@@ -13,7 +13,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static mitrofanov.resolvers.impl.StartNicknameResolver.setSessionStateForThisUser;
+import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisUser;
+
 
 public class BadalkaResolver implements CommandResolver {
 
@@ -33,39 +34,16 @@ public class BadalkaResolver implements CommandResolver {
 
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
-        if (text.startsWith("/badalka")) {
-            if (badalkaService.hasNotListForThisUser(chatId)) {
-                badalkaService.setNewListUserForAttack(chatId);
-                badalkaService.setCurrIndexInUserForAttack(chatId);
-            }
-            int curIndex = badalkaService.getCurrIndexInUserForAttack(chatId);
-            String userProfileForAttack = badalkaService.generateUserProfileForAttack(badalkaService.getUserForAttack(chatId, curIndex).
-                    getChatId());
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setText(userProfileForAttack);
-            sendMessage.setChatId(chatId);
-            sendMessage.setReplyMarkup(BadalkaButtonKeyboard.badalkaKeyboard());
-            try {
-                tg_bot.execute(sendMessage);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-        if (text.startsWith("/attack")) {
-            int indexUserForDeferent = badalkaService.getCurrIndexInUserForAttack(chatId);
-            Long chatIdUserForDeferent = badalkaService.getUserForAttack(chatId, indexUserForDeferent).getChatId();
-            ArrayList<Long> winer = badalkaService.fight(chatId, chatIdUserForDeferent);
-            Map<Long, Long> table = badalkaService.changeGoldAfterFight(winer.get(0), winer.get(1));
-            TelegramBotUtils.sendMessage(tg_bot, "За победу вы получили " + table.get(winer.get(0)).toString() + " золота", winer.get(0));
-            TelegramBotUtils.sendMessage(tg_bot, "Вас победили и вы потеряли " + table.get(winer.get(1)).toString() + " золота", winer.get(1));
-        }
-        if (text.startsWith("/skip")) {
-            badalkaService.setCurrIndexInUserForAttack(chatId);
-            SendMessage sendMessage = new SendMessage();
-            if (badalkaService.hasLenghtUserForAttackMoreCurrIndex(chatId)) {
-                User userForAttacked = badalkaService.getUserForAttack(chatId, badalkaService.getCurrIndexInUserForAttack(chatId));
-                String userProfileForAttack =  badalkaService.generateUserProfileForAttack(userForAttacked.getChatId());
+        if (badalkaService.isBodalkaAvailable(chatId)) {
+            if (text.startsWith("/badalka")) {
+                if (badalkaService.hasNotListForThisUser(chatId)) {
+                    badalkaService.setNewListUserForAttack(chatId);
+                    badalkaService.setCurrIndexInUserForAttack(chatId);
+                }
+                int curIndex = badalkaService.getCurrIndexInUserForAttack(chatId);
+                String userProfileForAttack = badalkaService.generateUserProfileForAttack(badalkaService.getUserForAttack(chatId, curIndex).
+                        getChatId());
+                SendMessage sendMessage = new SendMessage();
                 sendMessage.setText(userProfileForAttack);
                 sendMessage.setChatId(chatId);
                 sendMessage.setReplyMarkup(BadalkaButtonKeyboard.badalkaKeyboard());
@@ -74,22 +52,52 @@ public class BadalkaResolver implements CommandResolver {
                 } catch (TelegramApiException e) {
                     throw new RuntimeException(e);
                 }
-            } else {
-                sendMessage.setText("Сори, больше никого нет, иди на ферму");
-                sendMessage.setChatId(chatId);
-                badalkaService.deleteCurrIndexInUserForAttackAndList(chatId);
+
+            }
+            if (text.startsWith("/attack")) {
+                int indexUserForDeferent = badalkaService.getCurrIndexInUserForAttack(chatId);
+                Long chatIdUserForDeferent = badalkaService.getUserForAttack(chatId, indexUserForDeferent).getChatId();
+                ArrayList<Long> winer = badalkaService.fight(chatId, chatIdUserForDeferent);
+                Map<Long, Long> table = badalkaService.changeGoldAfterFight(winer.get(0), winer.get(1));
+                TelegramBotUtils.sendMessage(tg_bot, "За победу вы получили " + table.get(winer.get(0)).toString() + " золота", winer.get(0));
+                TelegramBotUtils.sendMessage(tg_bot, "Вас победили и вы потеряли " + table.get(winer.get(1)).toString() + " золота", winer.get(1));
+                badalkaService.setTimeLastAttack(chatId);
                 setSessionStateForThisUser(chatId, State.IDLE);
-                try {
-                    tg_bot.execute(sendMessage);
-                } catch (TelegramApiException e) {
-                    throw new RuntimeException(e);
+            }
+            if (text.startsWith("/skip")) {
+                badalkaService.setCurrIndexInUserForAttack(chatId);
+                SendMessage sendMessage = new SendMessage();
+                if (badalkaService.hasLenghtUserForAttackMoreCurrIndex(chatId)) {
+                    User userForAttacked = badalkaService.getUserForAttack(chatId, badalkaService.getCurrIndexInUserForAttack(chatId));
+                    String userProfileForAttack = badalkaService.generateUserProfileForAttack(userForAttacked.getChatId());
+                    sendMessage.setText(userProfileForAttack);
+                    sendMessage.setChatId(chatId);
+                    sendMessage.setReplyMarkup(BadalkaButtonKeyboard.badalkaKeyboard());
+                    try {
+                        tg_bot.execute(sendMessage);
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    sendMessage.setText("Сори, больше никого нет, иди на ферму");
+                    sendMessage.setChatId(chatId);
+                    badalkaService.deleteCurrIndexInUserForAttackAndList(chatId);
+                    setSessionStateForThisUser(chatId, State.IDLE);
+                    try {
+                        tg_bot.execute(sendMessage);
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
-        }
-        if(text.startsWith("/leaveBadalka")) {
-            TelegramBotUtils.sendMessage(tg_bot, "Вы ушли с поля боя", chatId);
-            badalkaService.deleteCurrIndexInUserForAttackAndList(chatId);
+            if (text.startsWith("/leaveBadalka")) {
+                TelegramBotUtils.sendMessage(tg_bot, "Вы ушли с поля боя", chatId);
+                badalkaService.deleteCurrIndexInUserForAttackAndList(chatId);
+                setSessionStateForThisUser(chatId, State.IDLE);
+            }
+        } else {
             setSessionStateForThisUser(chatId, State.IDLE);
+            TelegramBotUtils.sendMessage(tg_bot, "Вы сейчас не можете сражаться", chatId);
         }
     }
 }
