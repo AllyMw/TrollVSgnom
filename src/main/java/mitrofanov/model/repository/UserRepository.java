@@ -35,7 +35,7 @@ public class UserRepository {
     @SneakyThrows
     public void setFarmHoursByChatId(Long chatId, int countHours) {
         Connection connection = DBConnection.getConnection();
-        String sql = "UPDATE player SET globalCountFarmHours = ? WHERE chatid = ?";
+        String sql = "UPDATE player SET farmhours = ? WHERE chatid = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, countHours);
         statement.setLong(2, chatId);
@@ -56,5 +56,18 @@ public class UserRepository {
         connection.close();
         return farmhours;
     }
+    @SneakyThrows
+    public String getNickNameByChatId(Long chatId) {
+        Connection connection = DBConnection.getConnection();
+        String sql = "SELECT * FROM player WHERE chatid = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setLong(1, chatId);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        String nickname = resultSet.getString("nickname");
+        statement.close();
+        connection.close();
+        return nickname;
     }
+}
 
