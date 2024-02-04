@@ -67,7 +67,7 @@ public class BadalkaResolver implements CommandResolver {
                 TelegramBotUtils.sendMessage(tg_bot, "Вас победили и вы потеряли " + table.get(winer.get(1)).toString() + " золота", winer.get(1));
                 eventService.addNewBadalkaEvent(winer, table);
                 badalkaService.setTimeLastAttack(chatId);
-                setSessionStateForThisUser(chatId, State.IDLE);
+
             }
             if (text.startsWith("/skip")) {
                 badalkaService.setCurrIndexInUserForAttack(chatId);

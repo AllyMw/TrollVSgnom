@@ -7,6 +7,7 @@ import mitrofanov.model.entity.FermaEvent;
 import mitrofanov.model.entity.User;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class EventRepository {
             FermaEvent fermaEvent = FermaEvent.builder().build();
             fermaEvent.setChatid(resultSet.getLong("chatid"));
             fermaEvent.setGold(resultSet.getLong("gold"));
-            fermaEvent.setDateEvent(resultSet.getDate("dateevent").toLocalDate());
+            fermaEvent.setDateEvent(resultSet.getObject("dateevent", LocalDateTime.class));
             fermaEvents.add(fermaEvent);
         }
 
@@ -55,7 +56,7 @@ public class EventRepository {
             badalkaEvent.setNickNameWinner(resultSet.getString("nicknamewinner"));
             badalkaEvent.setNickNameLoser(resultSet.getString("nicknameloser"));
             badalkaEvent.setChangeGold(resultSet.getLong("changegold"));
-            badalkaEvent.setDateBadalkaEvent(resultSet.getDate("datebadalkaevent").toLocalDate());
+            badalkaEvent.setDateBadalkaEvent(resultSet.getObject("datebadalkaevent", LocalDateTime.class));
             badalkaEvents.add(badalkaEvent);
         }
 
@@ -75,7 +76,7 @@ public class EventRepository {
            PreparedStatement statement = connection.prepareStatement(query);
            statement.setLong(1, fermaEvent.getChatid());
            statement.setLong(2, fermaEvent.getGold());
-           statement.setTimestamp(3,  Timestamp.valueOf(fermaEvent.getDateEvent().toString()));
+           statement.setTimestamp(3,  Timestamp.valueOf(fermaEvent.getDateEvent()));
 
            statement.executeUpdate();
 
@@ -101,7 +102,7 @@ public class EventRepository {
             statement.setString(3, badalkaEvent.getNickNameWinner());
             statement.setString(4, badalkaEvent.getNickNameLoser());
             statement.setLong(5, badalkaEvent.getChangeGold());
-            statement.setTimestamp(6,  Timestamp.valueOf(badalkaEvent.getDateBadalkaEvent().toString()));
+            statement.setTimestamp(6,  Timestamp.valueOf(badalkaEvent.getDateBadalkaEvent()));
 
             statement.executeUpdate();
 

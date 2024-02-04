@@ -17,9 +17,9 @@ public class RegistrationService {
 
         User newUser = User.builder().chatId(chatId).gold(100L).power(5).mastery(5)
                 .agility(5).weight(5)
-                .dateLastAtack(LocalDate.of(1999,6, 6))
-                .dateLastGuard(LocalDate.of(1999,6, 6))
-                .dateLastFarme(LocalDate.of(1999,6, 6))
+                .dateLastAtack(LocalDateTime.now())
+                .dateLastGuard(LocalDateTime.now())
+                .dateLastFarme(LocalDateTime.now())
                 .build();
 
         newUser.setFightingPower(newUser.getFightingPower());

@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 enum Commands {
     START("/start", "запуск бота"),
+    HISTORY("/event", "Получить историю"),
     PROFILE("/profile", "Вывести свой профль"),
     TRAINING("/training", "Пойти на тренировку"),
     BADALKA("/badalka", "Пойти в бадалку"),

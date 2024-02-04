@@ -21,9 +21,9 @@ public class User {
     int mastery;
     int weight;
     Long fightingPower;
-    LocalDate dateLastAtack;
-    LocalDate dateLastGuard;
-    LocalDate dateLastFarme;
+    LocalDateTime dateLastAtack;
+    LocalDateTime dateLastGuard;
+    LocalDateTime dateLastFarme;
 
     int globalCountFarmHours;
 

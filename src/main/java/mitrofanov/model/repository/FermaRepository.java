@@ -48,7 +48,7 @@ public class FermaRepository {
     public static void addGoldForUser(Long chatId, Long gold) {
         try {
             Connection connection = DBConnection.getConnection();
-            String sql = "UPDATE player SET gold = ? WHERE chat_id = ?";
+            String sql = "UPDATE player SET gold = ? WHERE chatid = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, gold);
             statement.setLong(2, chatId);

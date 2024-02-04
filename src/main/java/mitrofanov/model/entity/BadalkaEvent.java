@@ -3,6 +3,9 @@ package mitrofanov.model.entity;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @AllArgsConstructor
 @Builder
 @Getter
@@ -13,11 +16,11 @@ public class BadalkaEvent {
     String nickNameWinner;
     String nickNameLoser;
     Long changeGold;
-    LocalDate dateBadalkaEvent;
+    LocalDateTime dateBadalkaEvent;
 
     @Override
     public String toString() {
         return "Игрок" + nickNameWinner + " победил игрока "
-                + nickNameLoser + ", победитель дополнительно отнял у проигравшего " + (changeGold - 100L) + " Дата: " + dateBadalkaEvent + "\n";
+                + nickNameLoser + ", победитель дополнительно отнял у проигравшего " + (changeGold - 100L) + " Дата: " + dateBadalkaEvent.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) + "\n";
     }
 }

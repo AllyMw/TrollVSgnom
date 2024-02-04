@@ -3,8 +3,11 @@ package mitrofanov.service;
 import mitrofanov.model.entity.BadalkaEvent;
 import mitrofanov.model.entity.FermaEvent;
 import mitrofanov.model.repository.EventRepository;
+import org.glassfish.grizzly.http.util.TimeStamp;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ public class EventService {
         StringBuilder fermaBilder = new StringBuilder();
 
         ArrayList<BadalkaEvent> badalkaEvents = eventRepository.getBadalkaEventsByChatId(chatId);
+        badalkaBilder.append("События бадалки: ");
         ArrayList<FermaEvent> fermaEvents = eventRepository.getFermaEventsByChatId(chatId);
 
         for (BadalkaEvent badalkaEvent: badalkaEvents) {
@@ -42,7 +46,11 @@ public class EventService {
         badalkaEvent.setNickNameWinner(userService.getNickNameByChatId(chatIdWinner));
         badalkaEvent.setNickNameLoser(userService.getNickNameByChatId(chatIdLoser));
         badalkaEvent.setChangeGold(changeGold.get(chatIdWinner));
-        badalkaEvent.setDateBadalkaEvent(LocalDate.now());
+
+        LocalDateTime localDate = LocalDateTime.now();
+
+
+        badalkaEvent.setDateBadalkaEvent(localDate);
         eventRepository.addNewBadalkaEvent(badalkaEvent);
     }
 }

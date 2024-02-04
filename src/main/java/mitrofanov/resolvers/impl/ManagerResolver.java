@@ -48,7 +48,6 @@ public class ManagerResolver implements CommandResolver {
             commandResolver.resolveCommand(tg_bot, text, chatId);
         } else {
             TelegramBotUtils.sendMessage(tg_bot, "Вы что-то сделали не так", chatId);
-
         }
 
     }

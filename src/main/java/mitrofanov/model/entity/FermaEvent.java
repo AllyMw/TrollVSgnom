@@ -3,6 +3,7 @@ package mitrofanov.model.entity;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -14,7 +15,7 @@ import java.util.Locale;
 public class FermaEvent {
     Long chatid;
     Long gold;
-    LocalDate dateEvent;
+    LocalDateTime dateEvent;
 
     @Override
     public String toString() {
