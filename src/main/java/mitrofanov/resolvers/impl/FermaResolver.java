@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import mitrofanov.keyboards.FermaKeyboard;
 import mitrofanov.model.repository.FermaRepository;
 import mitrofanov.resolvers.CommandResolver;
+import mitrofanov.service.EventService;
 import mitrofanov.service.FermaService;
 import mitrofanov.session.State;
 import mitrofanov.utils.TelegramBotUtils;
@@ -24,7 +25,15 @@ import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisU
 
 public class FermaResolver implements CommandResolver {
     private final String COMMAND_NAME = "/farm";
-    FermaService fermaService = new FermaService();
+    private final FermaService fermaService;
+    private final EventService eventService;
+
+    public FermaResolver() {
+        this.fermaService =  new FermaService();
+        this.eventService = new EventService();
+    }
+
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 
     @SneakyThrows
@@ -68,15 +77,18 @@ public class FermaResolver implements CommandResolver {
                 setSessionStateForThisUser(chatId, State.IDLE);
                 return;
             }
-            sendMessage.setText("Вы ушли на ферму на 3 часа.\nВам будет начислено 30 золота");
+            Long goldForFerm = fermaService.getCountGoldForFermByChatId(3, chatId);
+            fermaService.addGoldForUserByFarm(chatId,  goldForFerm);
+            sendMessage.setText("Вы ушли на ферму на 3 часа.\n Теперь у вас "+ fermaService.getGoldAfterByFerma(chatId) + " золота");
             sendMessage.setChatId(chatId);
             tg_bot.execute(sendMessage);
 
-            LocalDateTime currentTime = LocalDateTime.now();
-            LocalDateTime hours = currentTime.plusHours(1);
+            LocalDateTime hours = LocalDateTime.now().plusHours(3);
+
+            eventService.addNewFermaEvent(chatId, goldForFerm, hours);
 
             fermaService.updateUserDateLastFarm(chatId, hours);
-            fermaService.addGoldForUserByFarm(chatId, 3000L);
+
             fermaService.updateFarmHours(chatId, 3);
 
             setSessionStateForThisUser(chatId, State.IDLE);
@@ -88,8 +100,9 @@ public class FermaResolver implements CommandResolver {
                 setSessionStateForThisUser(chatId, State.IDLE);
                 return;
             }
-
-            sendMessage.setText("Вы ушли на ферму на 6 часов.\nВам будет начислено 60 золота");
+            Long goldForFerm = fermaService.getCountGoldForFermByChatId(6, chatId);
+            fermaService.addGoldForUserByFarm(chatId,  goldForFerm);
+            sendMessage.setText("Вы ушли на ферму на 6 часа.\n Теперь у вас "+ fermaService.getGoldAfterByFerma(chatId) + " золота");
             sendMessage.setChatId(chatId);
             tg_bot.execute(sendMessage);
 
@@ -97,7 +110,8 @@ public class FermaResolver implements CommandResolver {
             LocalDateTime hours = currentTime.plusHours(6);
 
             fermaService.updateUserDateLastFarm(chatId, hours);
-            fermaService.addGoldForUserByFarm(chatId, 60L);
+            eventService.addNewFermaEvent(chatId, goldForFerm, hours);
+
             fermaService.updateFarmHours(chatId, 6);
 
             setSessionStateForThisUser(chatId, State.IDLE);
@@ -107,16 +121,17 @@ public class FermaResolver implements CommandResolver {
                 setSessionStateForThisUser(chatId, State.IDLE);
                 return;
             }
-
-            sendMessage.setText("Вы ушли на ферму на 12 часов.\nВам будет начислено 120 золота");
+            Long goldForFerm = fermaService.getCountGoldForFermByChatId(12, chatId);
+            fermaService.addGoldForUserByFarm(chatId,  goldForFerm);
+            sendMessage.setText("(\"Вы ушли на ферму на 12 часа.\n Теперь у вас "+ fermaService.getGoldAfterByFerma(chatId) + " золота");
             sendMessage.setChatId(chatId);
             tg_bot.execute(sendMessage);
 
             LocalDateTime currentTime = LocalDateTime.now();
             LocalDateTime hours = currentTime.plusHours(12);
-
+            eventService.addNewFermaEvent(chatId, goldForFerm, hours);
             fermaService.updateUserDateLastFarm(chatId, hours);
-            fermaService.addGoldForUserByFarm(chatId, 120L);
+
             fermaService.updateFarmHours(chatId, 12);
 
             setSessionStateForThisUser(chatId, State.IDLE);

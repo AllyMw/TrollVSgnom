@@ -53,5 +53,14 @@ public class EventService {
         badalkaEvent.setDateBadalkaEvent(localDate);
         eventRepository.addNewBadalkaEvent(badalkaEvent);
     }
+
+    public void addNewFermaEvent(Long chatId, Long gold, LocalDateTime dateTime) {
+        FermaEvent fermaEvent = FermaEvent.builder().build();
+        fermaEvent.setDateEvent(dateTime);
+        fermaEvent.setGold(gold);
+        fermaEvent.setChatid(chatId);
+        eventRepository.addNewFermEvent(fermaEvent);
+    }
+
 }
 

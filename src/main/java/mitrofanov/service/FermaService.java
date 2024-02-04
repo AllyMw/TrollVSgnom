@@ -6,9 +6,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class FermaService {
+    private final FermaRepository fermaRepository;
+
+    public FermaService() {
+        this.fermaRepository = new FermaRepository();
+    }
 
     public boolean isRunOutTimeOfUser(Long chatId) {
-        LocalDateTime userTime = FermaRepository.getThisUserTime(chatId); //время из табл + сколько-то часов
+        LocalDateTime userTime = fermaRepository.getThisUserTime(chatId); //время из табл + сколько-то часов
 
         if (LocalDateTime.now().isBefore(userTime)) {
             return false;  //время еще не кончилось делать ничего нельзя
@@ -18,7 +23,7 @@ public class FermaService {
     }
 
     public String getRemainingTime(Long chatId) {
-        LocalDateTime userTime = FermaRepository.getThisUserTime(chatId);
+        LocalDateTime userTime = fermaRepository.getThisUserTime(chatId);
         LocalDateTime currentTime = LocalDateTime.now();
 
         if (currentTime.isBefore(userTime)) {
@@ -34,22 +39,33 @@ public class FermaService {
     }
 
     public void updateUserDateLastFarm(Long chatId, LocalDateTime hours) {
-        FermaRepository.updateUserTime(chatId, hours);
+        fermaRepository.updateUserTime(chatId, hours);
     }
 
     public String getUserTimeNow(Long chatId) {
-        FermaRepository.getThisUserTime(chatId);
+        fermaRepository.getThisUserTime(chatId);
         return null;
     }
 
     public void addGoldForUserByFarm(Long chatId, Long i) {
-        Long currentGold = FermaRepository.getGoldForUser(chatId);
+        Long currentGold = fermaRepository.getGoldForUser(chatId);
         Long newGold = currentGold + i;
-        FermaRepository.addGoldForUser(chatId, newGold);
+        fermaRepository.addGoldForUser(chatId, newGold);
     }
     public void  updateFarmHours(Long chatId, int farmHours) {
-        int currentFarmHours = FermaRepository.getFarmHours(chatId, farmHours);
+        int currentFarmHours = FermaRepository.getFarmHours(chatId);
         int newFarmHours = currentFarmHours + farmHours;
         FermaRepository.setFarmHours(chatId, newFarmHours);
     }
+
+    public Long getCountGoldForFermByChatId(int hour, Long chatId) {
+        Long result = (long) ((hour * 120 )+ (FermaRepository.getFarmHours(chatId) * 1000));
+        return result;
+    }
+
+    public Long getGoldAfterByFerma(Long chatId) {
+        Long result = fermaRepository.getGoldForUser(chatId);
+        return result;
+    }
+
 }

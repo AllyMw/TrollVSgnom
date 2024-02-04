@@ -9,20 +9,7 @@ import java.time.LocalDateTime;
 
 public class FermaRepository {
     @SneakyThrows
-    public void saveThisUsersTime(User user, LocalDateTime hours) {
-        try {
-            Connection connection = DBConnection.getConnection();
-            String sql = "INSERT INTO player (chatid, datelastfarme) VALUES (?,?)";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setLong(1, user.getChatId());
-            statement.setObject(2, hours);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при записи даты");
-        }
-    }
-    @SneakyThrows
-    public static LocalDateTime getThisUserTime(Long chatId) {
+    public  LocalDateTime getThisUserTime(Long chatId) {
         Connection connection = DBConnection.getConnection();
         String sql = "SELECT datelastfarme FROM player WHERE chatid = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -33,7 +20,7 @@ public class FermaRepository {
         }
         return null;
     }
-    public static void updateUserTime(Long chatId, LocalDateTime hours) {
+    public  void updateUserTime(Long chatId, LocalDateTime hours) {
         try {
             Connection connection = DBConnection.getConnection();
             String sql = "UPDATE player SET datelastfarme = ? WHERE chatid = ?";
@@ -45,7 +32,7 @@ public class FermaRepository {
             throw new RuntimeException("Ошибка");
         }
     }
-    public static void addGoldForUser(Long chatId, Long gold) {
+    public  void addGoldForUser(Long chatId, Long gold) {
         try {
             Connection connection = DBConnection.getConnection();
             String sql = "UPDATE player SET gold = ? WHERE chatid = ?";
@@ -58,7 +45,7 @@ public class FermaRepository {
         }
     }
     @SneakyThrows
-    public static Long getGoldForUser(Long chatId) {
+    public Long getGoldForUser(Long chatId) {
 
         Connection connection = DBConnection.getConnection();
         String sql = "SELECT * FROM player WHERE chatid = ?";
@@ -85,7 +72,7 @@ public class FermaRepository {
         }
     }
     @SneakyThrows
-    public static int getFarmHours(Long chatId, int farmHours) {
+    public static int getFarmHours(Long chatId) {
 
         Connection connection = DBConnection.getConnection();
         String sql = "SELECT * FROM player WHERE chatid = ?";
@@ -93,7 +80,7 @@ public class FermaRepository {
         statement.setLong(1, chatId);
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
-        farmHours = resultSet.getInt("farmhours");
+        int farmHours = resultSet.getInt("farmhours");
         statement.close();
         connection.close();
         return farmHours;
