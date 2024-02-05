@@ -24,7 +24,6 @@ public class User {
     LocalDateTime dateLastAtack;
     LocalDateTime dateLastGuard;
     LocalDateTime dateLastFarme;
-
     int globalCountFarmHours;
 
     public Long getFightingPower() {

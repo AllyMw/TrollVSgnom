@@ -10,9 +10,7 @@ import java.util.List;
 
 public class ChangeRaceButton {
 
-    @SneakyThrows
     public static InlineKeyboardMarkup PersKeyboard() {
-
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();

@@ -66,7 +66,7 @@ public class FermaResolver implements CommandResolver {
                 setSessionStateForThisUser(chatId, State.IDLE);
             } else if (fermaService.isRunOutTimeOfUser(chatId)) {
                 sendMessage.setText("Выберите на сколько часов отправитесь на ферму");
-                sendMessage.setReplyMarkup(FermaKeyboard.hoursKeyboard(tg_bot, chatId));
+                sendMessage.setReplyMarkup(FermaKeyboard.hoursKeyboard());
                 sendMessage.setChatId(chatId);
                 tg_bot.execute(sendMessage);
             }

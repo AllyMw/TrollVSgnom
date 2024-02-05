@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FermaKeyboard {
-    public static InlineKeyboardMarkup hoursKeyboard(TelegramLongPollingBot tg_bot, Long chatId) {
+    public static InlineKeyboardMarkup hoursKeyboard() {
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();

@@ -22,10 +22,7 @@ import java.util.Map;
 
 
 public class TelegramRequestHandler extends TelegramLongPollingBot {
-
-
     private final RegistrationService registrationService;
-
     private final TrainingKeyboard trainingKeyboard;
     public static Map<String, CommandResolver> resolvers = Configuration.resolvers;
     private final SessionManager sessionManager = SessionManager.getInstance();
@@ -35,20 +32,16 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
         resolvers.put(startResolver.getCommandName(), startResolver);
 
     }
-
     public TelegramRequestHandler() {
         registrationService = new RegistrationService();
         trainingKeyboard = new TrainingKeyboard();
-
-
-
     }
 
     public void init() throws TelegramApiException {
             this.execute(new SetMyCommands(StartCommands.init(), new BotCommandScopeDefault(), null));
         }
 
-        @SneakyThrows
+
         @Override
         public void onUpdateReceived(Update update) {
 
@@ -60,7 +53,11 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 createSessionForThisUser(chatID);
                 String resolverName = getResolverName(chatID);
                 processCommand(callData, chatID, resolverName);
-                trainingKeyboard.updateTrainingKeyboard(this, chatID, update.getCallbackQuery().getMessage().getMessageId(), callData);
+                try {
+                    trainingKeyboard.updateTrainingKeyboard(this, chatID, update.getCallbackQuery().getMessage().getMessageId(), callData);
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
 
             }
             if (update.hasMessage()) {
@@ -80,10 +77,6 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
             }
     }
 
-
-
-
-
     @Override
     public String getBotUsername() {
         return mitrofanov.Configuration.BOT_USERNAME;
@@ -93,6 +86,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     public String getBotToken() {
         return mitrofanov.Configuration.BOT_TOKEN;
     }
+
     private void processCommand(String text, Long chatID, String resolverName) {
         CommandResolver commandResolver = resolvers.get(resolverName);
         commandResolver.resolveCommand(this, text, chatID);
@@ -101,6 +95,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     private void createSessionForThisUser(Long chatID) {
         sessionManager.createSession(chatID);
     }
+
     private static String getResolverName(Long chatID) {
         Session session = SessionManager.getInstance().getSession(chatID);
         String resolverName = session.getState().getValue();
@@ -109,5 +104,4 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
     public static void setSessionStateForThisUser(Long chat_id, State state) {
         SessionManager.getInstance().getSession(chat_id).setState(state);
     }
-
 }

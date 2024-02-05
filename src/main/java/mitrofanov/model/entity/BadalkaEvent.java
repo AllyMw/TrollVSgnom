@@ -20,7 +20,7 @@ public class BadalkaEvent {
 
     @Override
     public String toString() {
-        return "Игрок" + nickNameWinner + " победил игрока "
-                + nickNameLoser + ", победитель дополнительно отнял у проигравшего " + (changeGold - 100L) + " Дата: " + dateBadalkaEvent.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) + "\n";
+        return   nickNameWinner + " победил  "
+                + nickNameLoser + " и отнял у проигравшего " + (changeGold - 100L) + " Дата: " + dateBadalkaEvent.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) + "\n";
     }
 }

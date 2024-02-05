@@ -18,6 +18,7 @@ public class TrainingKeyboard {
 
         TrainingService trainingService = new TrainingService();
         HashMap<String, Long> cost = trainingService.countCost(Long.valueOf(chatId));
+
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText("Какую характеристику хотите прокачать?\nПосле оканчания тренировки не забудь нажать на кнопку \"Выйти\"");
@@ -59,14 +60,13 @@ public class TrainingKeyboard {
         rowsInLine.add(rowInLine1);
         rowsInLine.add(rowInLine2);
 
-
         markupInLine.setKeyboard(rowsInLine);
         sendMessage.setReplyMarkup(markupInLine);
 
         bot.execute(sendMessage);
 
     }
-    public @NonNull String updateTrainingKeyboard(TelegramLongPollingBot bot, Long chatId, Integer messageId, String callBack) throws TelegramApiException {
+    public String updateTrainingKeyboard(TelegramLongPollingBot bot, Long chatId, Integer messageId, String callBack) throws TelegramApiException {
         if (callBack.equals("/agilityTraining")
                 || callBack.equals("/powerTraining")
                 || callBack.equals("/masteryTraining")

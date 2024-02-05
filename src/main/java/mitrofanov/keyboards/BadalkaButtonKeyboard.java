@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BadalkaButtonKeyboard {
-    @SneakyThrows
+
     public static InlineKeyboardMarkup badalkaKeyboard() {
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
