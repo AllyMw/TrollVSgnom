@@ -20,6 +20,7 @@ public class ManagerResolver implements CommandResolver {
         this.badalkaService = BadalkaService.getInstance();
 
     }
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -43,7 +44,7 @@ public class ManagerResolver implements CommandResolver {
             setSessionStateForThisUser(chatId, State.FARM);
             CommandResolver commandResolver = resolvers.get("/farm");
             commandResolver.resolveCommand(tg_bot, text, chatId);
-        } else if (text.startsWith("/event")){
+        } else if (text.startsWith("/event")) {
             CommandResolver commandResolver = resolvers.get("/event");
             commandResolver.resolveCommand(tg_bot, text, chatId);
         } else {

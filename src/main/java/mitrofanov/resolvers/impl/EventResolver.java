@@ -18,11 +18,11 @@ public class EventResolver implements CommandResolver {
 
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
-
             String userEvent = eventService.generateEventUser(chatId);
-            TelegramBotUtils.sendMessage(tg_bot, userEvent, chatId);
-            setSessionStateForThisUser(chatId, State.IDLE);
 
+            TelegramBotUtils.sendMessage(tg_bot, userEvent, chatId);
+
+            setSessionStateForThisUser(chatId, State.IDLE);
     }
 
     @Override

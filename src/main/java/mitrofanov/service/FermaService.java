@@ -32,7 +32,7 @@ public class FermaService {
             long minutes = remainingTime.toMinutesPart();
             long seconds = remainingTime.toSecondsPart();
 
-            return String.format("Осталось: %d часов, %d минут, %d секунд", hours, minutes, seconds);
+            return String.format(" %d : %d : %d ", hours, minutes, seconds);
         } else {
             return "Время уже истекло";
         }

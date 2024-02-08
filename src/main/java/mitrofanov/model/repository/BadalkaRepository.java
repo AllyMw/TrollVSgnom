@@ -119,5 +119,23 @@ public class BadalkaRepository {
             throw new RuntimeException("Ошибка");
         }
     }
+    public LocalDateTime getTimeLastAttack(Long chatId) {
+        try {
+            Connection connection = DBConnection.getConnection();
+
+            String sql = "SELECT datelastattack FROM player WHERE chatid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, chatId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getObject("datelastattack", LocalDateTime.class);
+            }
+            return null;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка");
+        }
+    }
 }
 

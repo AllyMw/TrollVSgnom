@@ -10,6 +10,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 
+import java.sql.SQLException;
+
 import static mitrofanov.handlers.TelegramRequestHandler.setSessionStateForThisUser;
 
 
@@ -23,12 +25,21 @@ public class ProfileResolver implements CommandResolver {
         this.profileService = new ProfileService();
     }
 
-    @SneakyThrows
+
     @Override
-    public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId)  {
+    public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
         registrationService.hasChatId(chatId);
+
         setSessionStateForThisUser(chatId, State.IDLE);
-        String userProfile = profileService.generateUserProfile(chatId);
+
+        String userProfile;
+
+        try {
+            userProfile = profileService.generateUserProfile(chatId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         TelegramBotUtils.sendMessage(tg_bot, userProfile, chatId);
 
 

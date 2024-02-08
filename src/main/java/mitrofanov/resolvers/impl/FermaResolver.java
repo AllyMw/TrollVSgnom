@@ -40,18 +40,19 @@ public class FermaResolver implements CommandResolver {
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
         SendMessage sendMessage = new SendMessage();
+
         if (text.startsWith("/farm")) {
             if (!fermaService.isRunOutTimeOfUser(chatId)) {
 
-//TelegramBotUtils.sendMessage(tg_bot, "Вы уже находитесь на ферме. \nПовторное посещение будет доступно после окончания времени.\n" + fermaService.getRemainingTime(chatId), chatId);
-                sendMessage.setText("Вы уже находитесь на ферме. \nПовторное посещение будет доступно после окончания времени.\n" + fermaService.getRemainingTime(chatId));
+                sendMessage.setText("Вы уже находитесь на ферме. \nПовторное посещение будет доступно после окончания времени.\n Осталось:" + fermaService.getRemainingTime(chatId));
                 sendMessage.setChatId(chatId);
 
                 Message message = tg_bot.execute(sendMessage);
                 Integer messageId = message.getMessageId();
 
                 scheduler.scheduleAtFixedRate(() -> {
-                    String newText = "Вы уже находитесь на ферме. \nПовторное посещение будет доступно после окончания времени.\n" + fermaService.getRemainingTime(chatId);
+                    String newText = "Вы уже находитесь на ферме. \nПовторное посещение будет доступно после окончания времени.\n Осталось:" + fermaService.getRemainingTime(chatId);
+
                     EditMessageText editMessage = new EditMessageText();
                     editMessage.setChatId(chatId);
                     editMessage.setMessageId(messageId);
@@ -62,8 +63,11 @@ public class FermaResolver implements CommandResolver {
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
+
                 }, 0, 1, TimeUnit.SECONDS);
+
                 setSessionStateForThisUser(chatId, State.IDLE);
+
             } else if (fermaService.isRunOutTimeOfUser(chatId)) {
                 sendMessage.setText("Выберите на сколько часов отправитесь на ферму");
                 sendMessage.setReplyMarkup(FermaKeyboard.hoursKeyboard());
@@ -77,8 +81,11 @@ public class FermaResolver implements CommandResolver {
                 setSessionStateForThisUser(chatId, State.IDLE);
                 return;
             }
+
             Long goldForFerm = fermaService.getCountGoldForFermByChatId(3, chatId);
+
             fermaService.addGoldForUserByFarm(chatId,  goldForFerm);
+
             sendMessage.setText("Вы ушли на ферму на 3 часа.\n Теперь у вас "+ fermaService.getGoldAfterByFerma(chatId) + " золота");
             sendMessage.setChatId(chatId);
             tg_bot.execute(sendMessage);
@@ -101,7 +108,9 @@ public class FermaResolver implements CommandResolver {
                 return;
             }
             Long goldForFerm = fermaService.getCountGoldForFermByChatId(6, chatId);
+
             fermaService.addGoldForUserByFarm(chatId,  goldForFerm);
+
             sendMessage.setText("Вы ушли на ферму на 6 часа.\n Теперь у вас "+ fermaService.getGoldAfterByFerma(chatId) + " золота");
             sendMessage.setChatId(chatId);
             tg_bot.execute(sendMessage);
@@ -122,14 +131,18 @@ public class FermaResolver implements CommandResolver {
                 return;
             }
             Long goldForFerm = fermaService.getCountGoldForFermByChatId(12, chatId);
+
             fermaService.addGoldForUserByFarm(chatId,  goldForFerm);
+
             sendMessage.setText("(\"Вы ушли на ферму на 12 часа.\n Теперь у вас "+ fermaService.getGoldAfterByFerma(chatId) + " золота");
             sendMessage.setChatId(chatId);
             tg_bot.execute(sendMessage);
 
             LocalDateTime currentTime = LocalDateTime.now();
             LocalDateTime hours = currentTime.plusHours(12);
+
             eventService.addNewFermaEvent(chatId, goldForFerm, hours);
+
             fermaService.updateUserDateLastFarm(chatId, hours);
 
             fermaService.updateFarmHours(chatId, 12);

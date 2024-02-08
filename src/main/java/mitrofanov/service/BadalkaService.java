@@ -4,6 +4,8 @@ import mitrofanov.model.entity.User;
 import mitrofanov.model.repository.BadalkaRepository;
 import mitrofanov.model.repository.UserRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class BadalkaService {
@@ -30,8 +32,10 @@ public class BadalkaService {
 
     public ArrayList<Long> fight(Long chatIdAttaker, Long chatIdDefender) {
         ArrayList<Long> arrayList = new ArrayList<>();
+
         User attaker = badalkaRepository.getUserByChatId(chatIdAttaker);
         User defender = badalkaRepository.getUserByChatId(chatIdDefender);
+
         while (attaker.getWeight() > 0 && defender.getWeight() > 0) {
             var accuracy = (attaker.getAgility()+ attaker.getMastery()) / (defender.getMastery() + attaker.getAgility());
             if (Math.random() < accuracy) {
@@ -98,16 +102,20 @@ public class BadalkaService {
 
     public Map<Long, Long> changeGoldAfterFight(Long winnerChatId, Long wonnerChatId) {
         Map<Long, Long> table = new HashMap<>();
+
         Long goldForWin = (long) (userRepository.getGoldByChatId(winnerChatId)
                 + 100 + 0.15 * userRepository.getGoldByChatId(wonnerChatId));
         userRepository.setGoldByChatId(winnerChatId, goldForWin);
+
         Long changeGoldForWin = (long) (100 + 0.15 * userRepository.getGoldByChatId(wonnerChatId));
         table.put(winnerChatId, changeGoldForWin);
 
         Long goldForWon = (long) ((userRepository.getGoldByChatId(wonnerChatId)) * 0.85);
         userRepository.setGoldByChatId(wonnerChatId, goldForWon);
+
         Long changeGoldForWon = (long)(userRepository.getGoldByChatId(wonnerChatId) * 0.15);
         table.put(wonnerChatId, changeGoldForWon);
+
         return table;
     }
     public boolean hasLenghtUserForAttackMoreCurrIndex(Long chatId) {
@@ -129,6 +137,25 @@ public class BadalkaService {
 
     public void setTimeLastAttack(Long chatId) {
         badalkaRepository.setTimeLastAttack(chatId);
+    }
+
+    public String getTimeLastAttack(Long chatId) {
+        LocalDateTime attackTime = badalkaRepository.getTimeLastAttack(chatId);
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (currentTime.isBefore(attackTime)) {
+            Duration remainingTime = Duration.between(currentTime, attackTime);
+            long hours = remainingTime.toHours();
+            long minutes = remainingTime.toMinutesPart();
+            long seconds = remainingTime.toSecondsPart();
+
+            return String.format(" %d : %d : %d ", hours, minutes, seconds);
+        } else {
+            return "Время уже истекло";
+        }
+    }
+    public boolean isTimeLessThanCurrentAttack(Long chatId) {
+        return badalkaRepository.isTimeLessThanCurrentAttack(chatId);
     }
 }
 
