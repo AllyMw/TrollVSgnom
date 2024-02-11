@@ -21,7 +21,7 @@ public class FermaServiceTest {
         when(mockFermaRepository.getThisUserTime(chatId)).thenReturn(userTime);
         mockFermaRepository.getThisUserTime(chatId);
 
-        FermaService fermaService = new FermaService(mockFermaRepository);
+        FermaService fermaService = new FermaService();
 
         boolean result = fermaService.isRunOutTimeOfUser(chatId);
 

@@ -12,8 +12,8 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     // Внедрение зависимости через конструктор
-    public ProfileService(ProfileRepository profileRepository) {
-        this.profileRepository = profileRepository;
+    public ProfileService() {
+        this.profileRepository = new ProfileRepository();
     }
 
     public String generateUserProfile(Long chatId) throws SQLException {

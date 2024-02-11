@@ -30,14 +30,13 @@ public class BadalkaResolver implements CommandResolver {
     private final BadalkaService badalkaService;
     private final EventService eventService;
     private final FermaService fermaService;
-    private final FermaRepository fermaRepository;
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 
     public BadalkaResolver() {
         this.badalkaService = BadalkaService.getInstance();
         this.eventService = new EventService();
-        this.fermaRepository = new FermaRepository();
-        this.fermaService = new FermaService(fermaRepository);
+        this.fermaService = new FermaService();
 
     }
 

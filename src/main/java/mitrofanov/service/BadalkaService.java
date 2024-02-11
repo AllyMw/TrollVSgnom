@@ -14,7 +14,6 @@ public class BadalkaService {
     private final UserRepository userRepository;
     private final Map<Long, List<User>> usersForAttack;
     private final FermaService fermaService;
-    private final FermaRepository fermaRepository;
     private Map<Long, Integer> currIndexes;
     private static BadalkaService instance;
     public static BadalkaService getInstance() {
@@ -27,8 +26,8 @@ public class BadalkaService {
     public BadalkaService() {
         this.badalkaRepository = new BadalkaRepository();
         this.userRepository = new UserRepository();
-        this.fermaRepository = new FermaRepository();
-        this.fermaService = new FermaService(fermaRepository);
+
+        this.fermaService = new FermaService();
         this.usersForAttack = new HashMap<>();
         this.currIndexes = new HashMap<>();
     }

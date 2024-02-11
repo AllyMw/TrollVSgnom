@@ -27,11 +27,11 @@ public class FermaResolver implements CommandResolver {
     private final String COMMAND_NAME = "/farm";
     private final FermaService fermaService;
     private final EventService eventService;
-    private final FermaRepository fermaRepository;
+
 
     public FermaResolver() {
-        this.fermaRepository = new FermaRepository();
-        this.fermaService =  new FermaService(fermaRepository);
+
+        this.fermaService =  new FermaService();
         this.eventService = new EventService();
     }
 

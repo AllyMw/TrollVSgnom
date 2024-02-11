@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class FermaService {
     private final FermaRepository fermaRepository;
 
-    public FermaService(FermaRepository fermaRepository) {
+    public FermaService() {
         this.fermaRepository = new FermaRepository();
     }
 
