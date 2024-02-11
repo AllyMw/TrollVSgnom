@@ -4,6 +4,7 @@ import mitrofanov.model.repository.UserRepository;
 import mitrofanov.service.BadalkaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -13,8 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class BadalkaServiceTest {
+    @Mock
     private BadalkaRepository badalkaRepository;
+    @Mock
     private UserRepository userRepository;
+    @Mock
     private BadalkaService badalkaService;
 
     @BeforeEach
@@ -75,7 +79,5 @@ public class BadalkaServiceTest {
                 "------------------------------\n";
         assertEquals(expectedProfile, badalkaService.generateUserProfileForAttack(chatId));
     }
-
-
 }
 

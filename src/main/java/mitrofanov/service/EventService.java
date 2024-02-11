@@ -25,7 +25,7 @@ public class EventService {
         StringBuilder fermaBilder = new StringBuilder();
 
         ArrayList<BadalkaEvent> badalkaEvents = eventRepository.getBadalkaEventsByChatId(chatId);
-        badalkaBilder.append("События бадалки: ");
+        badalkaBilder.append("События бадалки: \n");
         ArrayList<FermaEvent> fermaEvents = eventRepository.getFermaEventsByChatId(chatId);
 
         for (BadalkaEvent badalkaEvent: badalkaEvents) {
@@ -38,19 +38,19 @@ public class EventService {
         return "События бадалки: " + "\n" + badalkaEvents.toString() + "\n" + "Походы на ферму: " + fermaBilder;
     }
     public void addNewBadalkaEvent(ArrayList<Long> winner, Map<Long, Long> changeGold) {
-        BadalkaEvent badalkaEvent = BadalkaEvent.builder().build();
+
+
         Long chatIdWinner = winner.get(0);
         Long chatIdLoser = winner.get(1);
+
+        BadalkaEvent badalkaEvent = BadalkaEvent.builder().build();
         badalkaEvent.setChatIdWinner(chatIdWinner);
         badalkaEvent.setChatIdLoser(chatIdLoser);
         badalkaEvent.setNickNameWinner(userService.getNickNameByChatId(chatIdWinner));
         badalkaEvent.setNickNameLoser(userService.getNickNameByChatId(chatIdLoser));
         badalkaEvent.setChangeGold(changeGold.get(chatIdWinner));
+        badalkaEvent.setDateBadalkaEvent(LocalDateTime.now());
 
-        LocalDateTime localDate = LocalDateTime.now();
-
-
-        badalkaEvent.setDateBadalkaEvent(localDate);
         eventRepository.addNewBadalkaEvent(badalkaEvent);
     }
 
@@ -59,8 +59,12 @@ public class EventService {
         fermaEvent.setDateEvent(dateTime);
         fermaEvent.setGold(gold);
         fermaEvent.setChatid(chatId);
+
         eventRepository.addNewFermEvent(fermaEvent);
     }
 
+    public void deleteHistoryByChatId(Long chatId) {
+        eventRepository.deleteHistoryByChatId(chatId);
+    }
 }
 

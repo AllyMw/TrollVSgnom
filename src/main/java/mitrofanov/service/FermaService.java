@@ -13,21 +13,20 @@ public class FermaService {
     }
 
     public boolean isRunOutTimeOfUser(Long chatId) {
-        LocalDateTime userTime = fermaRepository.getThisUserTime(chatId); //время из табл + сколько-то часов
+        LocalDateTime userTime = fermaRepository.getThisUserTime(chatId);
 
         if (LocalDateTime.now().isBefore(userTime)) {
-            return false;  //время еще не кончилось делать ничего нельзя
+            return false;
         } else  {
-           return true; //можно выполнять дальнейшие действия
+           return true;
         }
     }
 
     public String getRemainingTime(Long chatId) {
         LocalDateTime userTime = fermaRepository.getThisUserTime(chatId);
-        LocalDateTime currentTime = LocalDateTime.now();
 
-        if (currentTime.isBefore(userTime)) {
-            Duration remainingTime = Duration.between(currentTime, userTime);
+        if (LocalDateTime.now().isBefore(userTime)) {
+            Duration remainingTime = Duration.between(LocalDateTime.now(), userTime);
             long hours = remainingTime.toHours();
             long minutes = remainingTime.toMinutesPart();
             long seconds = remainingTime.toSecondsPart();
@@ -41,12 +40,6 @@ public class FermaService {
     public void updateUserDateLastFarm(Long chatId, LocalDateTime hours) {
         fermaRepository.updateUserTime(chatId, hours);
     }
-
-    public String getUserTimeNow(Long chatId) {
-        fermaRepository.getThisUserTime(chatId);
-        return null;
-    }
-
     public void addGoldForUserByFarm(Long chatId, Long i) {
         Long currentGold = fermaRepository.getGoldForUser(chatId);
         Long newGold = currentGold + i;
@@ -57,12 +50,10 @@ public class FermaService {
         int newFarmHours = currentFarmHours + farmHours;
         FermaRepository.setFarmHours(chatId, newFarmHours);
     }
-
     public Long getCountGoldForFermByChatId(int hour, Long chatId) {
         Long result = (long) ((hour * 120 )+ (FermaRepository.getFarmHours(chatId) * 1000));
         return result;
     }
-
     public Long getGoldAfterByFerma(Long chatId) {
         Long result = fermaRepository.getGoldForUser(chatId);
         return result;

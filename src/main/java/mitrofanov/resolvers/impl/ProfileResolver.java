@@ -1,6 +1,7 @@
 package mitrofanov.resolvers.impl;
 
 import lombok.SneakyThrows;
+import mitrofanov.keyboards.DeleteHistoryButton;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.service.ProfileService;
 import mitrofanov.service.RegistrationService;
@@ -8,6 +9,7 @@ import mitrofanov.session.State;
 import mitrofanov.utils.TelegramBotUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 import java.sql.SQLException;
@@ -40,11 +42,7 @@ public class ProfileResolver implements CommandResolver {
             throw new RuntimeException(e);
         }
 
-        TelegramBotUtils.sendMessage(tg_bot, userProfile, chatId);
-
-
     }
-
     @Override
     public String getCommandName() {
         return COMMAND_NAME;

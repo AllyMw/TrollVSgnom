@@ -128,4 +128,30 @@ public class EventRepository {
             e.printStackTrace();
         }
     }
+
+    @SneakyThrows
+    public void deleteHistoryByChatId(Long chatId) {
+        try {
+            Connection connection = DBConnection.getConnection();
+
+            String deleteFermaEventQuery = "DELETE FROM fermaevent WHERE chatid = ?";
+            String deleteBadalkaEventQuery = "DELETE FROM badalkaevent WHERE chatidwinner = ? or chatidloser = ?";
+
+            PreparedStatement psFermaEvent = connection.prepareStatement(deleteFermaEventQuery);
+            psFermaEvent.setLong(1, chatId);
+            psFermaEvent.executeUpdate();
+
+            PreparedStatement psBadalkaEvent = connection.prepareStatement(deleteBadalkaEventQuery);
+            psBadalkaEvent.setLong(1, chatId);
+            psBadalkaEvent.setLong(2, chatId);
+            psBadalkaEvent.executeUpdate();
+
+            psBadalkaEvent.close();
+            psFermaEvent.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

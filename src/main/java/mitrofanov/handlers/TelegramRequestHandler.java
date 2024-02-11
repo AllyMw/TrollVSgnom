@@ -53,6 +53,7 @@ public class TelegramRequestHandler extends TelegramLongPollingBot {
                 createSessionForThisUser(chatID);
                 String resolverName = getResolverName(chatID);
                 processCommand(callData, chatID, resolverName);
+
                 try {
                     trainingKeyboard.updateTrainingKeyboard(this, chatID, update.getCallbackQuery().getMessage().getMessageId(), callData);
                 } catch (TelegramApiException e) {

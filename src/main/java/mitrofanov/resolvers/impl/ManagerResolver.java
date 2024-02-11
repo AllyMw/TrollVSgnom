@@ -44,7 +44,7 @@ public class ManagerResolver implements CommandResolver {
             setSessionStateForThisUser(chatId, State.FARM);
             CommandResolver commandResolver = resolvers.get("/farm");
             commandResolver.resolveCommand(tg_bot, text, chatId);
-        } else if (text.startsWith("/event")) {
+        } else if (text.startsWith("/event") || text.startsWith("/deleteHistory")) {
             CommandResolver commandResolver = resolvers.get("/event");
             commandResolver.resolveCommand(tg_bot, text, chatId);
         } else {

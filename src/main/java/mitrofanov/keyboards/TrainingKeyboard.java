@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TrainingKeyboard {
-    public  void trainingKeyboard(TelegramLongPollingBot bot, Long chatId) throws TelegramApiException {
+    public void trainingKeyboard(TelegramLongPollingBot bot, Long chatId) throws TelegramApiException {
 
         TrainingService trainingService = new TrainingService();
         HashMap<String, Long> cost = trainingService.countCost(Long.valueOf(chatId));

@@ -24,6 +24,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-log4j12:2.0.9'
     implementation 'org.telegram:telegrambots:6.8.0'
     implementation 'org.jsoup:jsoup:1.17.1'
+    testImplementation 'junit:junit:4.13.1'
 
 
     compileOnly 'org.projectlombok:lombok:1.18.30'

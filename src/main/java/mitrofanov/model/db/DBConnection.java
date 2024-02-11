@@ -1,22 +1,16 @@
 package mitrofanov.model.db;
-
-
-
-import mitrofanov.Configuration;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static mitrofanov.Configuration.*;
 
 public class DBConnection {
 
     private static final String URL =
-            DB_URL;
-    private static final String USER = DB_USER;
-    private static final String PASSWORD = DB_PASSWORD;
+            "jdbc:postgresql://localhost:5433/postgres";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "123";
 
     private static Connection conn = null;
 

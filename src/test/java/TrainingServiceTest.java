@@ -1,26 +1,15 @@
 import mitrofanov.model.repository.TrainingRepository;
 import mitrofanov.service.TrainingService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import java.util.HashMap;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TrainingServiceTest {
-    @Mock
-    private TrainingRepository trainingRepository;
-    @Mock
-    private TrainingService trainingService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        trainingService = new TrainingService();
-    }
+    private TrainingRepository trainingRepository = new TrainingRepository();
+    private TrainingService trainingService = new TrainingService();
+
 
     @Test
     void testCountCost() {
@@ -30,10 +19,6 @@ class TrainingServiceTest {
         int agility = 4;
         int mastery = 3;
         int weight = 2;
-        when(trainingRepository.getPower(chatId)).thenReturn(power);
-        when(trainingRepository.getAgility(chatId)).thenReturn(agility);
-        when(trainingRepository.getMastery(chatId)).thenReturn(mastery);
-        when(trainingRepository.getWeight(chatId)).thenReturn(weight);
 
         // Act
         HashMap<String, Long> result = trainingService.countCost(chatId);
@@ -62,29 +47,29 @@ class TrainingServiceTest {
 
     @Test
     void testEnoughGoldForTraining_NotEnoughGold() {
-        // Arrange
+
         Long currCost = 100L;
         Long chatId = 123L;
         Long haveGold = 50L;
         when(trainingRepository.getGoldByChatId(chatId)).thenReturn(haveGold);
 
-        // Act
+
         boolean result = trainingService.enoughGoldForTraining(currCost, chatId);
 
-        // Assert
+
         assertFalse(result);
     }
 
     @Test
     void testDecreaseGold() {
-        // Arrange
+
         Long chatId = 123L;
         Long gold = 50L;
 
-        // Act
+
         trainingService.decreaseGold(chatId, gold);
 
-        // Assert
+
         verify(trainingRepository, times(1)).decreaseGoldByChatId(chatId, gold);
     }
 }

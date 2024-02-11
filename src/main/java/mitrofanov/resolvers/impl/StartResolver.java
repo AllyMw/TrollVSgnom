@@ -38,27 +38,32 @@ public class StartResolver implements CommandResolver {
             registrationService.addNewPlayer(chatId);
 
         } else if (registrationService.nickNameNotNull(chatId)) {
-            registrationService.setNickName(text, chatId);
 
-            SendMessage sendMessage = new SendMessage();
-            SendPhoto sendPhoto = new SendPhoto();
-            sendPhoto.setChatId(chatId);
-            sendPhoto.setPhoto(new InputFile("https://i.postimg.cc/D06Gg43r/image.jpg"));
+            if (registrationService.isNicknameIsFree(text)) {
+                registrationService.setNickName(text, chatId);
 
-            try {
-                tg_bot.execute(sendPhoto);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+                SendMessage sendMessage = new SendMessage();
+                SendPhoto sendPhoto = new SendPhoto();
+                sendPhoto.setChatId(chatId);
+                sendPhoto.setPhoto(new InputFile("https://i.postimg.cc/D06Gg43r/image.jpg"));
 
-            sendMessage.setText("Выберите расу");
-            sendMessage.setReplyMarkup(ChangeRaceButton.PersKeyboard());
-            sendMessage.setChatId(chatId);
+                try {
+                    tg_bot.execute(sendPhoto);
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
 
-            try {
-                tg_bot.execute(sendMessage);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
+                sendMessage.setText("Выберите расу");
+                sendMessage.setReplyMarkup(ChangeRaceButton.PersKeyboard());
+                sendMessage.setChatId(chatId);
+
+                try {
+                    tg_bot.execute(sendMessage);
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                TelegramBotUtils.sendMessage(tg_bot, "Такой никнейм уже занят", chatId);
             }
 
         } else if (registrationService.raceNotNull(chatId)) {
@@ -89,12 +94,6 @@ public class StartResolver implements CommandResolver {
             }
         }
     }
-
-
-    private void setState(Long chatId, State state) {
-        SessionManager.getInstance().getSession(chatId).setState(state);
-    }
-
 }
 
 

@@ -37,10 +37,13 @@ public class BadalkaService {
         User defender = badalkaRepository.getUserByChatId(chatIdDefender);
 
         while (attaker.getWeight() > 0 && defender.getWeight() > 0) {
-            var accuracy = (attaker.getAgility()+ attaker.getMastery()) / (defender.getMastery() + attaker.getAgility());
+
+            var accuracy = (attaker.getAgility() + attaker.getMastery()) / (defender.getMastery() + attaker.getAgility());
+
             if (Math.random() < accuracy) {
                 defender.setWeight(defender.getWeight() - attaker.getPower());
             }
+
             var temp = attaker;
             attaker = defender;
             defender = temp;
@@ -55,7 +58,6 @@ public class BadalkaService {
         List<User> userList = badalkaRepository.getListUserForAttack(chatId);
         usersForAttack.put(chatId, userList);
     }
-
     public User getUserForAttack(Long chatId, int index) {
         return  usersForAttack.get(chatId).get(index);
     }
@@ -79,14 +81,12 @@ public class BadalkaService {
 
         return profileForAttack;
     }
-
     public int getCurrIndexInUserForAttack(Long chatId) {
         if (currIndexes.isEmpty()) {
             return 0;
         }
         return currIndexes.get(chatId);
     }
-
     public void setCurrIndexInUserForAttack(Long chatId) {
         if (currIndexes.containsKey(chatId)) {
             currIndexes.replace(chatId, currIndexes.get(chatId) + 1);
@@ -94,7 +94,6 @@ public class BadalkaService {
             currIndexes.put(chatId, 0);
         }
     }
-
     public void deleteCurrIndexInUserForAttackAndList(Long chatId) {
         currIndexes.remove(chatId);
         usersForAttack.remove(chatId);
