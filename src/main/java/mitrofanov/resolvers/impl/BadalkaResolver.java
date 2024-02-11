@@ -2,6 +2,7 @@ package mitrofanov.resolvers.impl;
 
 import mitrofanov.keyboards.BadalkaButtonKeyboard;
 import mitrofanov.model.entity.User;
+import mitrofanov.model.repository.FermaRepository;
 import mitrofanov.resolvers.CommandResolver;
 import mitrofanov.service.BadalkaService;
 import mitrofanov.service.EventService;
@@ -29,12 +30,14 @@ public class BadalkaResolver implements CommandResolver {
     private final BadalkaService badalkaService;
     private final EventService eventService;
     private final FermaService fermaService;
+    private final FermaRepository fermaRepository;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 
     public BadalkaResolver() {
         this.badalkaService = BadalkaService.getInstance();
         this.eventService = new EventService();
-        this.fermaService = new FermaService();
+        this.fermaRepository = new FermaRepository();
+        this.fermaService = new FermaService(fermaRepository);
 
     }
 

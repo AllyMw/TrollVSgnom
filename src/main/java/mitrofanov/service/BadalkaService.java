@@ -2,6 +2,7 @@ package mitrofanov.service;
 
 import mitrofanov.model.entity.User;
 import mitrofanov.model.repository.BadalkaRepository;
+import mitrofanov.model.repository.FermaRepository;
 import mitrofanov.model.repository.UserRepository;
 
 import java.time.Duration;
@@ -13,6 +14,7 @@ public class BadalkaService {
     private final UserRepository userRepository;
     private final Map<Long, List<User>> usersForAttack;
     private final FermaService fermaService;
+    private final FermaRepository fermaRepository;
     private Map<Long, Integer> currIndexes;
     private static BadalkaService instance;
     public static BadalkaService getInstance() {
@@ -25,7 +27,8 @@ public class BadalkaService {
     public BadalkaService() {
         this.badalkaRepository = new BadalkaRepository();
         this.userRepository = new UserRepository();
-        this.fermaService = new FermaService();
+        this.fermaRepository = new FermaRepository();
+        this.fermaService = new FermaService(fermaRepository);
         this.usersForAttack = new HashMap<>();
         this.currIndexes = new HashMap<>();
     }

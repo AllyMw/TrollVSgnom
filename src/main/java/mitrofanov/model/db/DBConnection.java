@@ -7,28 +7,23 @@ import java.sql.Statement;
 
 public class DBConnection {
 
-    private static final String URL =
-            "jdbc:postgresql://localhost:5433/postgres";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "123";
-
-    private static Connection conn = null;
-
+    private static ConnectionFactory connectionFactory = new DBConnectionFactory();
 
     public static Connection getConnection() {
-
         try {
-            conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            return connectionFactory.getConnection();
         } catch (SQLException e) {
-            System.err.println("пизда в конекшоне");
+            System.err.println("Ошибка в соединении");
             throw new RuntimeException(e);
         }
+    }
 
-        return conn;
+    public static void setConnectionFactory(ConnectionFactory factory) {
+        connectionFactory = factory;
     }
 
     public static void closeConnection(Connection conn) {
-        if (conn != null)
+        if (conn != null) {
             try {
                 conn.close();
             } catch (SQLException e) {
@@ -36,9 +31,11 @@ public class DBConnection {
                 e.printStackTrace();
                 System.exit(1);
             }
+        }
     }
+
     public static void closeStatement(Statement stmt) {
-        if (stmt != null)
+        if (stmt != null) {
             try {
                 stmt.close();
             } catch (SQLException e) {
@@ -46,6 +43,6 @@ public class DBConnection {
                 e.printStackTrace();
                 System.exit(1);
             }
+        }
     }
-
 }

@@ -41,6 +41,7 @@ public class ProfileResolver implements CommandResolver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        TelegramBotUtils.sendMessage(tg_bot, userProfile, chatId);
 
     }
     @Override

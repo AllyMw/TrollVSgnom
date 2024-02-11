@@ -14,6 +14,9 @@ tasks.withType(JavaCompile) {
 tasks.withType(JavaExec) {
     systemProperty 'file.encoding', 'UTF-8'
 }
+test {
+    useJUnitPlatform()
+}
 dependencies {
     implementation 'org.jetbrains:annotations:24.0.0'
     implementation 'org.jetbrains:annotations:24.0.0'
@@ -24,7 +27,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-log4j12:2.0.9'
     implementation 'org.telegram:telegrambots:6.8.0'
     implementation 'org.jsoup:jsoup:1.17.1'
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
 
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
@@ -35,10 +38,10 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     testImplementation "org.mockito:mockito-core:3.+"
+    testImplementation 'org.mockito:mockito-core:3.11.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    testImplementation 'org.mockito:mockito-core:3.11.2'
 }
 
 test {

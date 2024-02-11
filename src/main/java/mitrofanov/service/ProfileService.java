@@ -1,15 +1,21 @@
 package mitrofanov.service;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import mitrofanov.model.entity.User;
 import mitrofanov.model.repository.ProfileRepository;
 
 import java.sql.SQLException;
 
+
 public class ProfileService {
-private final ProfileRepository profileRepository;
-    public ProfileService() {
-        this.profileRepository = new ProfileRepository();
+    private final ProfileRepository profileRepository;
+
+    // Внедрение зависимости через конструктор
+    public ProfileService(ProfileRepository profileRepository) {
+        this.profileRepository = profileRepository;
     }
+
     public String generateUserProfile(Long chatId) throws SQLException {
 
         User user = profileRepository.getUserProfile(chatId);
