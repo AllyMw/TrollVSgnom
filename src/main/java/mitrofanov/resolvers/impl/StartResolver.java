@@ -39,7 +39,7 @@ public class StartResolver implements CommandResolver {
 
         } else if (registrationService.nickNameNotNull(chatId)) {
 
-            if (registrationService.isNicknameIsFree(text)) {
+            if (!registrationService.isNicknameIsFree(text)) {
                 registrationService.setNickName(text, chatId);
 
                 SendMessage sendMessage = new SendMessage();
